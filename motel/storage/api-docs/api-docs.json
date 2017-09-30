@@ -1,0 +1,339 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Motel API",
+        "version": "1.0.0"
+    },
+    "basePath": "/api",
+    "schemes": [
+        "http"
+    ],
+    "paths": {
+        "/motel/send-mail-again": {
+            "get": {
+                "tags": [
+                    "Motel"
+                ],
+                "summary": "",
+                "description": "",
+                "operationId": "",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "401": {
+                        "description": "unauthorized"
+                    },
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ]
+            }
+        },
+        "/motel/update-roles": {
+            "get": {
+                "tags": [
+                    "Motel"
+                ],
+                "summary": "",
+                "description": "",
+                "operationId": "",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "401": {
+                        "description": "unauthorized"
+                    },
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ]
+            }
+        },
+        "/members/getLogout": {
+            "get": {
+                "tags": [
+                    "Authenticate"
+                ],
+                "summary": "",
+                "description": "",
+                "operationId": "api.members.getLogout",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "401": {
+                        "description": "unauthorized"
+                    },
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ]
+            }
+        },
+        "/members/postLogin": {
+            "post": {
+                "tags": [
+                    "Authenticate"
+                ],
+                "summary": "Login",
+                "description": "<ul>\r\n     *     <li>email : string (required)</li>\r\n     *     <li>password : string (required)</li></ul>",
+                "operationId": "api.members.postLogin",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "description": "Target customer.",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Customer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "101": {
+                        "description": "Wrong email or password"
+                    },
+                    "102": {
+                        "description": "You need to confirm your account"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/members/postSignup": {
+            "post": {
+                "tags": [
+                    "Authenticate"
+                ],
+                "summary": "Register user",
+                "description": "<ul>\r\n     *     <li>email : string (required)</li>\r\n     *     <li>first name : string (required)</li>\r\n     *     <li>last name : string (required)</li>\r\n     *     <li>password : string (required)</li>\r\n          <li>phone number : string (required)</li></ul>",
+                "operationId": "addPet",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "description": "",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Register"
+                        }
+                    }
+                ],
+                "responses": {
+                    "405": {
+                        "description": "Invalid input"
+                    }
+                }
+            }
+        },
+        "/members/change-password": {
+            "post": {
+                "tags": [
+                    "Authenticate"
+                ],
+                "summary": "Register user",
+                "description": "<ul>\r\n     *     <li>password : string (required)</li></ul>",
+                "operationId": "addPet",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "description": "",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Changepassword"
+                        }
+                    }
+                ],
+                "responses": {
+                    "405": {
+                        "description": "Invalid input"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ]
+            }
+        },
+        "/members/forgot-password": {
+            "post": {
+                "tags": [
+                    "Authenticate"
+                ],
+                "summary": "Forgot password",
+                "description": "<ul>\r\n           <li>email : string (required)</li></ul>",
+                "operationId": "",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "description": "",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Forgotpassword"
+                        }
+                    }
+                ],
+                "responses": {
+                    "405": {
+                        "description": "Invalid input"
+                    }
+                },
+                "security": [
+                    {
+                        "petstore_auth": [
+                            "write:pets",
+                            "read:pets"
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+    "definitions": {
+        "Changepassword": {
+            "properties": {
+                "password": {
+                    "description": "",
+                    "type": "string",
+                    "example": "123456"
+                }
+            },
+            "type": "object",
+            "xml": {
+                "name": "Customer"
+            }
+        },
+        "Customer": {
+            "properties": {
+                "email": {
+                    "description": "",
+                    "type": "string",
+                    "example": "test@test.com"
+                },
+                "password": {
+                    "description": "",
+                    "type": "string",
+                    "format": "int64",
+                    "example": "7c4a8d09ca3762af61e59520943dc26494f8941b"
+                }
+            },
+            "type": "object",
+            "xml": {
+                "name": "Customer"
+            }
+        },
+        "Forgotpassword": {
+            "required": [
+                "name",
+                "photoUrls"
+            ],
+            "properties": {
+                "email": {
+                    "description": "",
+                    "type": "string",
+                    "example": ""
+                }
+            },
+            "type": "object",
+            "xml": {
+                "name": "Pet"
+            }
+        },
+        "Newpassword": {
+            "required": [
+                "name",
+                "photoUrls"
+            ],
+            "properties": {
+                "id": {
+                    "description": "",
+                    "type": "integer",
+                    "example": ""
+                },
+                "password": {
+                    "description": "",
+                    "type": "string",
+                    "example": ""
+                },
+                "token": {
+                    "description": "",
+                    "type": "string",
+                    "example": ""
+                }
+            },
+            "type": "object",
+            "xml": {
+                "name": "Pet"
+            }
+        },
+        "Register": {
+            "required": [
+                "name",
+                "photoUrls"
+            ],
+            "properties": {
+                "email": {
+                    "description": "",
+                    "type": "string",
+                    "example": "hoanghung@gmail.com"
+                },
+                "first_name": {
+                    "description": "",
+                    "type": "string",
+                    "example": "Hung"
+                },
+                "last_name": {
+                    "description": "",
+                    "type": "string",
+                    "example": "Nguyen"
+                },
+                "phone": {
+                    "description": "",
+                    "type": "string",
+                    "example": "0937094414"
+                },
+                "password": {
+                    "description": "",
+                    "type": "string",
+                    "example": "123456"
+                }
+            },
+            "type": "object",
+            "xml": {
+                "name": "Pet"
+            }
+        }
+    },
+    "securityDefinitions": {
+        "api_key": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    }
+}

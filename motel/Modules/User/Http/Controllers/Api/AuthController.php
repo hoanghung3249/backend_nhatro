@@ -27,6 +27,7 @@ use Modules\Portfolios\Entities\ResetPassword;
 use Modules\User\Repositories\Sentinel\SentinelUserRepository;
 use Modules\User\Entities\Sys\UserSetting;
 use Nexmo\Laravel\Facade\Nexmo;
+use Modules\User\Entities\Activation;
 
 class AuthController extends ApiController
 {
@@ -92,6 +93,7 @@ class AuthController extends ApiController
     public function postLogin(Request $request)
     {
         $customer = User::where('email',$request->email)->first();
+        $role_user = RoleUser::where('user_id',$customer->id)->first();
 
         if(isset($customer) && !empty($customer))
         {
@@ -109,7 +111,7 @@ class AuthController extends ApiController
                         'active' =>$customer->active,
                         'total_motel'=>$customer->total_motel,
                         'avatar'=>$customer->avatar,
-                        //'gender'=>$customer->gender,
+                        'role_id'=>$role_user->role_id,
                         'token'=>$token
 
                     ];
@@ -167,6 +169,13 @@ class AuthController extends ApiController
             $role_user->role_id = 2;
             $role_user->save();
 
+            $activation = new Activation();
+            $activation->user_id = $user->id;
+            $activation->code = str_random(32);
+            $activation->completed = 0;
+            $activation->completed_at = Carbon::now();
+            $activation->save();
+
             Mail::send('user::sentemail.register', ['user'=>$user], function ($message) use($user)
             {
                 $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
@@ -185,7 +194,7 @@ class AuthController extends ApiController
                         'active' =>$user->active,
                         'total_motel'=>$user->total_motel,
                         'avatar'=>$user->avatar,
-                        //'gender'=>$user->gender,
+                        'role_id'=>$role_user->role_id,
                         'token'=>$token
 
                     ];

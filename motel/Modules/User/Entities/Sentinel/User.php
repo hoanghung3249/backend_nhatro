@@ -13,7 +13,7 @@ use Modules\User\Presenters\UserPresenter;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Modules\User\Entities\RoleUser;
-
+use Modules\User\Entities\Sentinel\Roles;
 
 class User extends EloquentUser implements UserInterface, AuthenticatableContract
 {
@@ -137,7 +137,7 @@ class User extends EloquentUser implements UserInterface, AuthenticatableContrac
 
         return $permissions->hasAccess($permission);
     }
-    public function getRolesAttribute(){
-        return $this->belongsToMany(RoleUser::class,'role_users','user_id','role_id');
+    public function getRoleUser(){
+        return $this->belongsToMany(Roles::class, 'role_users', 'user_id', 'role_id')->withTimestamps();
     }
 }

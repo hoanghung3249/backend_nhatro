@@ -10,6 +10,8 @@ use Modules\Motel\Http\Requests\UpdateMotelRequest;
 use Modules\Motel\Repositories\MotelRepository;
 use Modules\Core\Http\Controllers\Admin\AdminBaseController;
 use Modules\Motel\Http\Controllers\Api\ApiController;
+use Illuminate\Pagination\LengthAwarePaginator as Paginator;
+
 
 class ApiMotelController extends ApiController
 {
@@ -76,10 +78,153 @@ class ApiMotelController extends ApiController
         	]);
 		}else{
 			return $this->respond([
-	            'status' => 'success',
+	            'status' => 'error',
 	            'status_code' => 201,
 	            'message' => "Your account has not been activated"
         	]);
 		}
 	}
+    /**
+     * @SWG\Post(
+     *     path="/motel/update-profile",
+     *     consumes={"multipart/form-data"},
+     *     description="",
+     *     operationId="uploadFile",
+     *     @SWG\Parameter(
+     *         description="file to upload",
+     *         in="formData",
+     *         name="image",
+     *         required=true,
+     *         type="file"
+     *     ),
+     *     @SWG\Parameter(
+     *         description="",
+     *         in="formData",
+     *         name="phone",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         description="",
+     *         in="formData",
+     *         name="first_name",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         description="",
+     *         in="formData",
+     *         name="last_name",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         description="",
+     *         in="formData",
+     *         name="address",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         description="",
+     *         in="formData",
+     *         name="latitude",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         description="",
+     *         in="formData",
+     *         name="longitude",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     produces={"application/json"},
+     *     @SWG\Response(
+     *         response="200",
+     *         description="successful operation",
+     *     ),
+     *   security={
+     *       {"api_key": {}}
+     *   },
+     *     summary="uploads an image",
+     *     tags={
+     *         "Motel"
+     *     }
+     * )
+     * */
+    public function postUpdateProfile(Request $request){
+        $data['phone'] = $request->phone;
+        $data['first_name'] = $request->first_name;
+        $data['last_name'] = $request->last_name;
+        $data['address'] = $request->last_name;
+        $data['latitude'] = $request->latitude;
+        $data['longitude'] = $request->longitude;
+        $data['image'] = $request->File('image');
+        $data = $this->motel->postUpdateProfile($data);
+       return $this->respond([
+                'status' => 'success',
+                'status_code' => 200,
+                'message' => "Update successful!",
+                'data' => $data,
+            ]);
+    }
+    /**
+     * @SWG\Get(
+     *   path="/motel/get-news",
+     *   description="",
+     *   summary="",
+     *   operationId="",
+     *   @SWG\Parameter(
+     *     description="",
+     *     in="query",
+     *     name="limit",
+     *     required=false,
+     *     type="integer",
+     *     default="10"
+     *   ),
+     *   @SWG\Parameter(
+     *     description="",
+     *     in="query",
+     *     name="country",
+     *     required=false,
+     *     type="integer",
+     *   ),
+     *   @SWG\Parameter(
+     *     description="",
+     *     in="query",
+     *     name="page",
+     *     required=false,
+     *     type="integer",
+     *     default="1"
+     *   ),
+     *   produces={"application/json"},
+     *   tags={"Motel"},
+     *   @SWG\Response(response=401, description="unauthorized"),
+     *   @SWG\Response(response=200, description="Success"),
+     *   security={
+     *       {"api_key": {}}
+     *   }
+     * )
+     */
+    public function getNews(Request $request){
+        $perPage = $request->has('limit') ? $request->get('limit') : 10;
+        $currentPage = $request->has('page') ? $request->get('page') : 1;
+        $country = $request->country;
+        //return $country;
+        $data = $this->motel->getNews($country);
+        //return $data;
+
+        $total = count($data);
+        $news = $data->paginate($perPage);
+        $paginate = new Paginator($data, $total, $perPage, $currentPage);
+
+        $news = $news->toarray();
+        if(count($news) > 0){
+             return $this->respondWithPagination($paginate,$news['data'],'Get list news');
+        }
+        else{
+            return $this->respondNotFound('Not Found');
+        }
+    }
 }

@@ -79,19 +79,17 @@ class ApiController extends BaseController
      * @return mixed
      */
     protected function respondWithPagination(Paginator $paginate, $data, $message){
-        $data = array_merge($data, [
+        return $this->respond([
+            'status' => 'success',
+            'status_code' => Res::HTTP_OK,
+            'message' => $message,
+            'data' => $data,
             'paginator' => [
                 'total_count'  => $paginate->total(),
                 'total_pages' => ceil($paginate->total() / $paginate->perPage()),
                 'current_page' => $paginate->currentPage(),
                 'limit' => $paginate->perPage(),
             ]
-        ]);
-        return $this->respond([
-            'status' => 'success',
-            'status_code' => Res::HTTP_OK,
-            'message' => $message,
-            'data' => $data
         ]);
     }
 

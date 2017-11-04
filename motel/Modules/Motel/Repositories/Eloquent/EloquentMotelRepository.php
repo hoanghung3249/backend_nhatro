@@ -13,9 +13,38 @@ use Illuminate\Http\Response;
 use Mail;
 use Carbon\Carbon;
 use DB;
+use File;
+use Modules\User\Entities\Activation;
+use Modules\Motel\Entities\News;
 
 class EloquentMotelRepository extends EloquentBaseRepository implements MotelRepository
 {
+ 	public function updateImageProfile($file)
+    {
+        $url = [];
+        $filepathLocal = "";
+        // $file = $request->file('picture');
+        if(isset($file) && !empty($file))
+        {
+            $filename = date("Ymdhis") . "_" . $file->getClientOriginalName();
+            //$tail  = $file->getClientOriginalExtension();
+            $filepath = public_path('assets/media');
+            // $img = \Image::make($file);
+            // $img->resize(50,50);
+            \Image::make($file->getRealPath())->resize(200, 200)->save("$filepath/$filename");
+            // if($file->move($filepath, $filename))
+            // {
+                //$filepathLocal = $filepath . "/" . $filename;
+
+            //    $url = S3::uploadFile($filepathLocal,$filename);
+            // }
+        }
+        // if($filepathLocal){
+        //     @unlink($filepathLocal);
+        // }
+
+       return $filename;
+    }
 	public function SendMailAgain(){
 		$user = Auth::guard('api')->user();
 		$token = str_random(40);
@@ -37,7 +66,7 @@ class EloquentMotelRepository extends EloquentBaseRepository implements MotelRep
 		$user = Auth::guard('api')->user();
 		$user_find = User::find($user->id);
 
-				//return $user;
+				//return $user_find;
 		$data = [];
 		if($user->active == 0){
 			return $data = [
@@ -45,8 +74,16 @@ class EloquentMotelRepository extends EloquentBaseRepository implements MotelRep
 			];
 			
 		}else{
-			$user_find->roles()->detach();
-			$user_find->roles()->attach(1);
+			$user_find->getRoleUser()->detach();
+			$user_find->getRoleUser()->attach(1);
+
+			$user_find->total_motel = env('TOTAL_MOTEL',2);
+			$user_find->save();
+
+			$activation = Activation::where('user_id',$user_find->id)->first();
+            $activation->completed = 1;
+            $activation->completed_at = Carbon::now();
+            $activation->save();
 			$data_user = DB::table(DB::raw('users as u'))
 					->selectRaw("
 						u.first_name,
@@ -71,5 +108,41 @@ class EloquentMotelRepository extends EloquentBaseRepository implements MotelRep
 				'data'=> $data_user
 			];
 		}
+	}
+	public function postUpdateProfile($data){
+		$user = Auth::guard('api')->user();
+		$user_check = User::find($user->id);
+		if($user_check){
+			$user_check->phone = $data['phone'];
+			$user_check->first_name = $data['first_name'];
+			$user_check->last_name = $data['last_name'];
+			$user_check->address = $data['address'];
+			$user_check->latitude = $data['latitude'];
+			$user_check->longitude = $data['longitude'];
+		    $file = $user_check->avatar;
+		    if(File::exists($file)){
+		    	File::delete($file);
+		    }        	
+		    $user_check->avatar = 'assets/media/'.$this->updateImageProfile($data['image']);
+		    $user_check->save();
+		   
+		    $data_user = User::select('users.email','users.first_name','users.last_name','users.phone','users.address','users.latitude','users.longitude','users.avatar','users.active','role_users.role_id')
+			            ->join('role_users', 'users.id', '=', 'role_users.user_id')
+			            ->join('roles', 'roles.id', '=', 'role_users.role_id')
+		    			->where('users.id',$user_check->id)
+		    			//->where('role_users.user_id',$user_check->id)
+		    			->first();
+		    return $data_user;
+
+		}
+	}
+	public function getNews($country){
+		//return $country;
+		$news = News::select('news.*')->where('country',$country)
+				// ->with('user')
+				->join('users', 'users.id', '=', 'news.user_id');
+				$news->orderBy('id','DESC')->get();
+		return $news;
+
 	}
 }

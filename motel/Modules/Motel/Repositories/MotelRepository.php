@@ -10,4 +10,5 @@ interface MotelRepository extends BaseRepository
 	public function getUpdateRoles();
 	public function postUpdateProfile($data);
 	public function getNews($country);
+	public function getListFilter($latitude, $longitude, $limit);
 }

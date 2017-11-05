@@ -16,5 +16,9 @@ $router->group(['prefix' =>'/motel'], function (Router $router) {
     $router->get('get-news', [
         'as' => 'admin.motel.motel.getnews',
         'uses' => 'ApiMotelController@getNews',
+    ]);
+    $router->get('filter-motel', [
+        'as' => 'admin.motel.motel.filtermotel',
+        'uses' => 'ApiMotelController@getListFilter',
     ]);    
 });

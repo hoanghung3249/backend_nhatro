@@ -215,13 +215,72 @@ class ApiMotelController extends ApiController
         $data = $this->motel->getNews($country);
         //return $data;
 
-        $total = count($data);
+        $total = count($data->get());
         $news = $data->paginate($perPage);
         $paginate = new Paginator($data, $total, $perPage, $currentPage);
 
         $news = $news->toarray();
+        //foreach($news )
         if(count($news) > 0){
              return $this->respondWithPagination($paginate,$news['data'],'Get list news');
+        }
+        else{
+            return $this->respondNotFound('Not Found');
+        }
+    }
+    /**
+     * @SWG\Get(
+     *   path="/motel/filter-motel",
+     *   description="",
+     *   summary="",
+     *   operationId="",
+     *   @SWG\Parameter(
+     *     description="",
+     *     in="query",
+     *     name="limit",
+     *     required=false,
+     *     type="integer",
+     *     default="3"
+     *   ),
+     *   @SWG\Parameter(
+     *     description="",
+     *     in="query",
+     *     name="latitude",
+     *     required=false,
+     *     type="string",
+     *   ),
+     *   @SWG\Parameter(
+     *     description="",
+     *     in="query",
+     *     name="longitude",
+     *     required=false,
+     *     type="string",
+     *   ),
+     *   produces={"application/json"},
+     *   tags={"Motel"},
+     *   @SWG\Response(response=401, description="unauthorized"),
+     *   @SWG\Response(response=200, description="Success"),
+     *   security={
+     *       {"api_key": {}}
+     *   }
+     * )
+     */
+    public function getListFilter(Request $request){
+        $latitude = $request->latitude;
+        $longitude = $request->longitude;
+        $limit = $request->limit;
+        $data = $this->motel->getListFilter($latitude,$longitude,$limit);
+        //return $data;
+
+        //$news = $news->toarray();
+        //foreach($news )
+        if(count($data) > 0){
+            return $this->respond([
+                'status' => 'success',
+                'status_code' => 200,
+                'message' => "Update successful!",
+                'data' => $data,
+            ]);
         }
         else{
             return $this->respondNotFound('Not Found');

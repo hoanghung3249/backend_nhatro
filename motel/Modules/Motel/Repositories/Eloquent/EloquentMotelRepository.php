@@ -138,11 +138,16 @@ class EloquentMotelRepository extends EloquentBaseRepository implements MotelRep
 	}
 	public function getNews($country){
 		//return $country;
-		$news = News::select('news.*')->where('country',$country)
-				// ->with('user')
+		$news = News::selectRaw('news.*, users.email as created_by')->where('country',$country)
+				//->with('user')
 				->join('users', 'users.id', '=', 'news.user_id');
-				$news->orderBy('id','DESC')->get();
+				$news->orderBy('id','DESC');
 		return $news;
 
+	}
+	public function getListFilter($latitude, $longitude, $limit){
+		$query = " SELECT *, (2 * (6371 * ATAN2(SQRT(POWER(SIN((RADIANS(".$latitude." - latitude ) ) / 2 ), 2 ) + COS(RADIANS(latitude)) *COS(RADIANS(".$latitude.")) * POWER(SIN((RADIANS(".$longitude." - longitude ) ) / 2 ), 2 )),SQRT(1-(POWER(SIN((RADIANS(".$latitude." - latitude ) ) / 2 ), 2 ) + COS(RADIANS(latitude)) * COS(RADIANS(".$latitude.")) * POWER(SIN((RADIANS(".$longitude." - longitude ) ) / 2 ), 2 )))))) AS 'distance' from news HAVING distance <". $limit;
+		$data = DB::select($query);
+		return $data;
 	}
 }

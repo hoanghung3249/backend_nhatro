@@ -37,23 +37,69 @@ class RegisterMotelSidebar implements \Maatwebsite\Sidebar\SidebarExtender
     public function extendWith(Menu $menu)
     {
         $menu->group(trans('core::sidebar.content'), function (Group $group) {
-            $group->item(trans('motel::motels.title.motels'), function (Item $item) {
-                $item->icon('fa fa-copy');
-                $item->weight(10);
+            $group->item(trans('Thống kê'), function (Item $item) {
+                $item->weight(3);
+                $item->icon('fa fa-bar-chart');
                 $item->authorize(
-                     /* append */
+                    $this->auth->hasAccess('user.users.index') or $this->auth->hasAccess('user.roles.index')
                 );
-                $item->item(trans('motel::motels.title.motels'), function (Item $item) {
-                    $item->icon('fa fa-copy');
+
+                $item->item(trans('Phòng đang được thuê'), function (Item $item) {
                     $item->weight(0);
-                    $item->append('admin.motel.motel.create');
-                    $item->route('admin.motel.motel.index');
+                    $item->icon('fa fa-home');
+                    $item->route('admin.room.room.index');
                     $item->authorize(
-                        $this->auth->hasAccess('motel.motels.index')
+                        $this->auth->hasAccess('user.users.index')
                     );
                 });
-// append
-
+                $item->item(trans('Danh sách người thuê'), function (Item $item) {
+                    $item->weight(0);
+                    $item->icon('fa fa-users');
+                    $item->route('admin.room.room.index');
+                    $item->authorize(
+                        $this->auth->hasAccess('user.users.index')
+                    );
+                });
+                $item->item(trans('Quản lý tiền phòng'), function (Item $item) {
+                    $item->weight(0);
+                    $item->icon('fa fa-usd');
+                    $item->route('admin.room.room.index');
+                    $item->authorize(
+                        $this->auth->hasAccess('user.users.index')
+                    );
+                });
+                $item->item(trans('Doanh thu hàng tháng'), function (Item $item) {
+                    $item->weight(0);
+                    $item->icon('fa fa-snowflake-o');
+                    $item->route('admin.room.room.index');
+                    $item->authorize(
+                        $this->auth->hasAccess('user.users.index')
+                    );
+                });
+            });
+            $group->item(trans('Lịch sử thuê phòng'), function (Item $item) {
+                $item->weight(0);
+                $item->icon('fa fa-history');
+                $item->route('admin.room.room.index');
+                $item->authorize(
+                    $this->auth->hasAccess('user.users.index')
+                );
+            });
+            $group->item(trans('Quản lý phòng'), function (Item $item) {
+                $item->weight(0);
+                $item->icon('fa fa-building-o');
+                $item->route('admin.room.room.index');
+                $item->authorize(
+                    $this->auth->hasAccess('user.users.index')
+                );
+            });
+            $group->item(trans('Các khoản thu chi'), function (Item $item) {
+                $item->weight(0);
+                $item->icon('fa fa-money');
+                $item->route('admin.room.room.index');
+                $item->authorize(
+                    $this->auth->hasAccess('user.users.index')
+                );
             });
         });
 

@@ -28,7 +28,8 @@ class User extends EloquentUser implements UserInterface, AuthenticatableContrac
         'last_name',
         'remember_token',
     ];
-
+    const USER_ROLE = 4;
+    const HOST_ROLE = 3;
     /**
      * {@inheritDoc}
      */

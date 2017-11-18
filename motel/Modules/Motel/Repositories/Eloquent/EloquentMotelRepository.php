@@ -16,6 +16,7 @@ use DB;
 use File;
 use Modules\User\Entities\Activation;
 use Modules\Motel\Entities\News;
+use Modules\Motel\Entities\Imgs;
 
 class EloquentMotelRepository extends EloquentBaseRepository implements MotelRepository
 {
@@ -27,16 +28,16 @@ class EloquentMotelRepository extends EloquentBaseRepository implements MotelRep
         if(isset($file) && !empty($file))
         {
             $filename = date("Ymdhis") . "_" . $file->getClientOriginalName();
-            //$tail  = $file->getClientOriginalExtension();
+            $tail  = $file->getClientOriginalExtension();
             $filepath = public_path('assets/media');
             // $img = \Image::make($file);
             // $img->resize(50,50);
             \Image::make($file->getRealPath())->resize(200, 200)->save("$filepath/$filename");
             // if($file->move($filepath, $filename))
             // {
-                //$filepathLocal = $filepath . "/" . $filename;
+            //     $filepathLocal = $filepath . "/" . $filename;
 
-            //    $url = S3::uploadFile($filepathLocal,$filename);
+            //    //$url = S3::uploadFile($filepathLocal,$filename);
             // }
         }
         // if($filepathLocal){
@@ -44,6 +45,35 @@ class EloquentMotelRepository extends EloquentBaseRepository implements MotelRep
         // }
 
        return $filename;
+    }
+ 	public function updateImageMotel($file)
+    {
+        $url = [];
+        $filepathLocal = "";
+        // $file = $request->file('picture');
+        if(isset($file) && !empty($file))
+        {
+            $filename = date("Ymdhis") . "_" . $file->getClientOriginalName();
+            //$tail  = $file->getClientOriginalExtension();
+            $filepath = public_path('assets/media');
+            // $img = \Image::make($file);
+            // $img->resize(50,50);
+            \Image::make($file->getRealPath())->resize(200, 200)->save("$filepath/thumb_$filename");
+            if($file->move($filepath, $filename))
+            {
+                $filepathLocal = $filepath . "/" . $filename;
+
+               //$url = S3::uploadFile($filepathLocal,$filename);
+            }
+        }
+        // if($filepathLocal){
+        //     @unlink($filepathLocal);
+        // }
+        $arr = [];
+       return $arr = [
+       	'img' => $filename,
+       	'thumb_img' =>"thumb_".$filename
+       ];
     }
 	public function SendMailAgain(){
 		$user = Auth::guard('api')->user();
@@ -75,7 +105,7 @@ class EloquentMotelRepository extends EloquentBaseRepository implements MotelRep
 			
 		}else{
 			$user_find->getRoleUser()->detach();
-			$user_find->getRoleUser()->attach(1);
+			$user_find->getRoleUser()->attach(3);
 
 			$user_find->total_motel = env('TOTAL_MOTEL',2);
 			$user_find->save();
@@ -138,16 +168,76 @@ class EloquentMotelRepository extends EloquentBaseRepository implements MotelRep
 	}
 	public function getNews($country){
 		//return $country;
-		$news = News::selectRaw('news.*, users.email as created_by')->where('country',$country)
+		$news = News::selectRaw('news.*, users.email as created_by')
+		->with(array('image'=>function($query){
+        	 //$query->select('sub_image','sub_image_thumb');
+   		}))
+		->where('country',$country)->where('status',1)
 				//->with('user')
 				->join('users', 'users.id', '=', 'news.user_id');
+				//->join('image', 'image.new_id', '=', 'news.id');
 				$news->orderBy('id','DESC');
 		return $news;
 
 	}
 	public function getListFilter($latitude, $longitude, $limit){
-		$query = " SELECT *, (2 * (6371 * ATAN2(SQRT(POWER(SIN((RADIANS(".$latitude." - latitude ) ) / 2 ), 2 ) + COS(RADIANS(latitude)) *COS(RADIANS(".$latitude.")) * POWER(SIN((RADIANS(".$longitude." - longitude ) ) / 2 ), 2 )),SQRT(1-(POWER(SIN((RADIANS(".$latitude." - latitude ) ) / 2 ), 2 ) + COS(RADIANS(latitude)) * COS(RADIANS(".$latitude.")) * POWER(SIN((RADIANS(".$longitude." - longitude ) ) / 2 ), 2 )))))) AS 'distance' from news HAVING distance <". $limit;
+		$query = " SELECT *, (2 * (6371 * ATAN2(SQRT(POWER(SIN((RADIANS(".$latitude." - latitude ) ) / 2 ), 2 ) + COS(RADIANS(latitude)) *COS(RADIANS(".$latitude.")) * POWER(SIN((RADIANS(".$longitude." - longitude ) ) / 2 ), 2 )),SQRT(1-(POWER(SIN((RADIANS(".$latitude." - latitude ) ) / 2 ), 2 ) + COS(RADIANS(latitude)) * COS(RADIANS(".$latitude.")) * POWER(SIN((RADIANS(".$longitude." - longitude ) ) / 2 ), 2 )))))) AS 'distance' from news where status = 1 HAVING distance <". $limit;
 		$data = DB::select($query);
-		return $data;
+		$arr = [];
+		foreach($data as $k => $v){
+			$img = Imgs::select('sub_image','sub_image_thumb')->where('new_id',$v->id)->get();
+			$arr[$k] = $v;
+			$arr[$k]->image = $img;
+		}
+		return $arr;
+	}
+	public function postNews($data){
+
+		$user = Auth::guard('api')->user();
+		//return $user;
+		$new = new News();
+   		$new->location = $data['location'];
+        $new->erea = $data['erea'];
+        $new->unit_price = $data['unit_price'];
+        $new->phone = $data['phone'];
+        $new->description = $data['description'];
+        $new->country = $data['country'];
+        $new->user_id = $user->id;
+        $new->latitude = $data['latitude'];
+        $new->longitude = $data['longitude'];
+        $new->status = 1;
+        $new->save();
+
+		$result_img = $this->updateImageMotel($data['sub1']);
+        $img = new Imgs();
+        $img->new_id = $new->id;
+        $img->sub_image = 'assets/media/'.$result_img['img'];
+        $img->sub_image_thumb = 'assets/media/'.$result_img['thumb_img'];
+        $img->save();
+
+		$result_img = $this->updateImageMotel($data['sub2']);
+        $img = new Imgs();
+        $img->new_id = $new->id;
+        $img->sub_image = 'assets/media/'.$result_img['img'];
+        $img->sub_image_thumb = 'assets/media/'.$result_img['thumb_img'];
+        $img->save();
+
+		$result_img = $this->updateImageMotel($data['sub3']);
+        $img = new Imgs();
+        $img->new_id = $new->id;
+        $img->sub_image = 'assets/media/'.$result_img['img'];
+        $img->sub_image_thumb = 'assets/media/'.$result_img['thumb_img'];
+        $img->save();
+
+		$result_img = $this->updateImageMotel($data['sub4']);
+        $img = new Imgs();
+        $img->new_id = $new->id;
+        $img->sub_image = 'assets/media/'.$result_img['img'];
+        $img->sub_image_thumb = 'assets/media/'.$result_img['thumb_img'];
+        $img->save();
+
+       	return true;
+        //$new->sub1 = 'assets/media/'.$this->updateImageProfile($data['image']);
+
 	}
 }

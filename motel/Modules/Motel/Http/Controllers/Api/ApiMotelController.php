@@ -157,7 +157,7 @@ class ApiMotelController extends ApiController
         $data['phone'] = $request->phone;
         $data['first_name'] = $request->first_name;
         $data['last_name'] = $request->last_name;
-        $data['address'] = $request->last_name;
+        $data['address'] = $request->address;
         $data['latitude'] = $request->latitude;
         $data['longitude'] = $request->longitude;
         $data['image'] = $request->File('image');
@@ -278,12 +278,141 @@ class ApiMotelController extends ApiController
             return $this->respond([
                 'status' => 'success',
                 'status_code' => 200,
-                'message' => "Update successful!",
+                'message' => "Get list successful!",
                 'data' => $data,
             ]);
         }
         else{
             return $this->respondNotFound('Not Found');
         }
+    }
+    /**
+     * @SWG\Post(
+     *     path="/motel/post-news",
+     *     consumes={"multipart/form-data"},
+     *     description="",
+     *     operationId="uploadFile",
+     *     @SWG\Parameter(
+     *         description="file to upload",
+     *         in="formData",
+     *         name="sub1",
+     *         required=true,
+     *         type="file"
+     *     ),
+     *     @SWG\Parameter(
+     *         description="file to upload",
+     *         in="formData",
+     *         name="sub2",
+     *         required=true,
+     *         type="file"
+     *     ),
+     *     @SWG\Parameter(
+     *         description="file to upload",
+     *         in="formData",
+     *         name="sub3",
+     *         required=true,
+     *         type="file"
+     *     ),
+     *     @SWG\Parameter(
+     *         description="file to upload",
+     *         in="formData",
+     *         name="sub4",
+     *         required=true,
+     *         type="file"
+     *     ),
+     *     @SWG\Parameter(
+     *         description="",
+     *         in="formData",
+     *         name="location",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         description="",
+     *         in="formData",
+     *         name="erea",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         description="",
+     *         in="formData",
+     *         name="unit_price",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         description="",
+     *         in="formData",
+     *         name="phone",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         description="",
+     *         in="formData",
+     *         name="description",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         description="",
+     *         in="formData",
+     *         name="country",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         description="",
+     *         in="formData",
+     *         name="latitude",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         description="",
+     *         in="formData",
+     *         name="longitude",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     produces={"application/json"},
+     *     @SWG\Response(
+     *         response="200",
+     *         description="successful operation",
+     *     ),
+     *   security={
+     *       {"api_key": {}}
+     *   },
+     *     summary="uploads an image",
+     *     tags={
+     *         "Motel"
+     *     }
+     * )
+     * */
+    public function postNews(Request $request){
+        $data['location'] = $request->location;
+        $data['erea'] = $request->erea;
+        $data['unit_price'] = $request->unit_price;
+        $data['phone'] = $request->phone;
+        $data['description'] = $request->description;
+        $data['country'] = $request->country;
+        $data['latitude'] = $request->latitude;
+        $data['longitude'] = $request->longitude;
+        $data['sub1'] = $request->File('sub1');
+        $data['sub2'] = $request->File('sub2');
+        $data['sub3'] = $request->File('sub3');
+        $data['sub4'] = $request->File('sub4');
+        $result = $this->motel->postNews($data);
+        //return $data;
+        if($result == true){
+            return $this->respond([
+                'status' => 'success',
+                'status_code' => 200,
+                'message' => "Upload successful!",
+                // 'data' => $result,
+            ]); 
+        }
+      
     }
 }

@@ -103,6 +103,7 @@ class AuthController extends ApiController
                     $token = $customer->createToken('Login Token')->accessToken;
                     $item = $customer->withAccessToken($token);
                     $data = [
+                        'id' =>$customer->id,
                         'first_name' =>$customer->first_name,
                         'last_name' =>$customer->last_name,
                         'phone' =>$customer->phone,
@@ -166,7 +167,7 @@ class AuthController extends ApiController
             $user->save();
             $role_user = new RoleUser();
             $role_user->user_id = $user->id;
-            $role_user->role_id = 2;
+            $role_user->role_id = User::USER_ROLE;
             $role_user->save();
 
             $activation = new Activation();

@@ -30,7 +30,10 @@
         "laravel/tinker": "~1.0",
         "darkaonline/l5-swagger": "~4.0",
         "laravel/passport": "^4.0",
-        "nexmo/laravel": "^1.0"
+        "nexmo/laravel": "^1.0",
+        "yajra/laravel-datatables-oracle": "^7.5",
+        "maatwebsite/excel": "~2.1.0",
+        "proengsoft/laravel-jsvalidation": "^2.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -64,7 +67,8 @@
         ],
         "post-update-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postUpdate",
-            "php artisan optimize"
+            "php artisan optimize",
+            "php artisan vendor:publish --provider=\"Proengsoft\\JsValidation\\JsValidationServiceProvider\" --tag=public --force"
         ]
     },
     "config": {

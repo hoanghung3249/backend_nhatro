@@ -2,18 +2,19 @@
 
 namespace Modules\Motel\Entities;
 
-use Dimsav\Translatable\Translatable;
+//use Dimsav\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
 use Modules\User\Entities\Sentinel\User;
+use Modules\Motel\Entities\Imgs;
 
 class News extends Model
 {
-    use Translatable;
+    //use Translatable;
 
     protected $table = 'news';
-    public $translatedAttributes = [];
-   // protected $fillable = [];
-    protected $guard = [];
+    //public $translatedAttributes = [];
+   	// protected $fillable = ['sub_image','sub_image_thumb'];
+   protected $guard = [];
 
 
     public function user()
@@ -22,6 +23,8 @@ class News extends Model
     }
 
 
-
+    public function image(){
+    	return $this->hasMany(Imgs::class, 'new_id');
+    }
 
 }

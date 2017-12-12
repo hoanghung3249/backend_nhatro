@@ -10,6 +10,7 @@
     </title>
     <meta id="token" name="token" value="{{ csrf_token() }}" />
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css">
     @foreach($cssFiles as $css)
         <link media="all" type="text/css" rel="stylesheet" href="{{ URL::asset($css) }}">
     @endforeach
@@ -62,11 +63,39 @@
     </aside><!-- /.right-side -->
     @include('partials.footer')
     @include('partials.right-sidebar')
+
+
+<div id="modal-detail-customer" class="modal fade modal-default in" role="dialog">
+  <div class="modal-dialog modal-lg">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+            <h4 class="modal-title" id="delete-confirmation-title">Thông tin chi tiết của khách hàng</h4>
+        </div>
+        <div class="modal-body">
+            <div class="default-message">
+                                </div>
+            <div class="custom-message"></div>
+        </div>
+      <div class="modal-footer">
+
+        <button type="button" class="btn btn-default btn-flat btn-outline-secondary" data-dismiss="modal">Huỷ bỏ</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
 </div><!-- ./wrapper -->
 
 @foreach($jsFiles as $js)
     <script src="{{ URL::asset($js) }}" type="text/javascript"></script>
 @endforeach
+<script type="text/javascript" src ="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/js/select2.min.js"></script>
 <?php if (is_module_enabled('Notification')): ?>
     <script src="https://js.pusher.com/3.0/pusher.min.js"></script>
     <script src="{{ Module::asset('notification:js/pusherNotifications.js') }}"></script>

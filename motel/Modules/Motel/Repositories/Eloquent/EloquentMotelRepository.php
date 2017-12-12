@@ -180,8 +180,14 @@ class EloquentMotelRepository extends EloquentBaseRepository implements MotelRep
 		return $news;
 
 	}
-	public function getListFilter($latitude, $longitude, $limit){
-		$query = " SELECT *, (2 * (6371 * ATAN2(SQRT(POWER(SIN((RADIANS(".$latitude." - latitude ) ) / 2 ), 2 ) + COS(RADIANS(latitude)) *COS(RADIANS(".$latitude.")) * POWER(SIN((RADIANS(".$longitude." - longitude ) ) / 2 ), 2 )),SQRT(1-(POWER(SIN((RADIANS(".$latitude." - latitude ) ) / 2 ), 2 ) + COS(RADIANS(latitude)) * COS(RADIANS(".$latitude.")) * POWER(SIN((RADIANS(".$longitude." - longitude ) ) / 2 ), 2 )))))) AS 'distance' from news where status = 1 HAVING distance <". $limit;
+	public function getListFilter($latitude, $longitude, $limit, $unit_price = 0){
+		if($unit_price == 1 ){
+			$query = " SELECT *, (2 * (6371 * ATAN2(SQRT(POWER(SIN((RADIANS(".$latitude." - latitude ) ) / 2 ), 2 ) + COS(RADIANS(latitude)) *COS(RADIANS(".$latitude.")) * POWER(SIN((RADIANS(".$longitude." - longitude ) ) / 2 ), 2 )),SQRT(1-(POWER(SIN((RADIANS(".$latitude." - latitude ) ) / 2 ), 2 ) + COS(RADIANS(latitude)) * COS(RADIANS(".$latitude.")) * POWER(SIN((RADIANS(".$longitude." - longitude ) ) / 2 ), 2 )))))) AS 'distance' from news where status = 1 and unit_price <= 5000000 HAVING distance <". $limit;	
+		}elseif($unit_price == 2){
+			$query = " SELECT *, (2 * (6371 * ATAN2(SQRT(POWER(SIN((RADIANS(".$latitude." - latitude ) ) / 2 ), 2 ) + COS(RADIANS(latitude)) *COS(RADIANS(".$latitude.")) * POWER(SIN((RADIANS(".$longitude." - longitude ) ) / 2 ), 2 )),SQRT(1-(POWER(SIN((RADIANS(".$latitude." - latitude ) ) / 2 ), 2 ) + COS(RADIANS(latitude)) * COS(RADIANS(".$latitude.")) * POWER(SIN((RADIANS(".$longitude." - longitude ) ) / 2 ), 2 )))))) AS 'distance' from news where status = 1 and unit_price > 5000000 HAVING distance <". $limit;	
+		}else{
+			$query = " SELECT *, (2 * (6371 * ATAN2(SQRT(POWER(SIN((RADIANS(".$latitude." - latitude ) ) / 2 ), 2 ) + COS(RADIANS(latitude)) *COS(RADIANS(".$latitude.")) * POWER(SIN((RADIANS(".$longitude." - longitude ) ) / 2 ), 2 )),SQRT(1-(POWER(SIN((RADIANS(".$latitude." - latitude ) ) / 2 ), 2 ) + COS(RADIANS(latitude)) * COS(RADIANS(".$latitude.")) * POWER(SIN((RADIANS(".$longitude." - longitude ) ) / 2 ), 2 )))))) AS 'distance' from news where status = 1 HAVING distance <". $limit;
+		}
 		$data = DB::select($query);
 		$arr = [];
 		foreach($data as $k => $v){
@@ -208,33 +214,39 @@ class EloquentMotelRepository extends EloquentBaseRepository implements MotelRep
         $new->status = 1;
         $new->save();
 
-		$result_img = $this->updateImageMotel($data['sub1']);
-        $img = new Imgs();
-        $img->new_id = $new->id;
-        $img->sub_image = 'assets/media/'.$result_img['img'];
-        $img->sub_image_thumb = 'assets/media/'.$result_img['thumb_img'];
-        $img->save();
 
-		$result_img = $this->updateImageMotel($data['sub2']);
-        $img = new Imgs();
-        $img->new_id = $new->id;
-        $img->sub_image = 'assets/media/'.$result_img['img'];
-        $img->sub_image_thumb = 'assets/media/'.$result_img['thumb_img'];
-        $img->save();
-
-		$result_img = $this->updateImageMotel($data['sub3']);
-        $img = new Imgs();
-        $img->new_id = $new->id;
-        $img->sub_image = 'assets/media/'.$result_img['img'];
-        $img->sub_image_thumb = 'assets/media/'.$result_img['thumb_img'];
-        $img->save();
-
-		$result_img = $this->updateImageMotel($data['sub4']);
-        $img = new Imgs();
-        $img->new_id = $new->id;
-        $img->sub_image = 'assets/media/'.$result_img['img'];
-        $img->sub_image_thumb = 'assets/media/'.$result_img['thumb_img'];
-        $img->save();
+        if($data['sub1']){
+        	$result_img = $this->updateImageMotel($data['sub1']);
+	        $img = new Imgs();
+	        $img->new_id = $new->id;
+	        $img->sub_image = 'assets/media/'.$result_img['img'];
+	        $img->sub_image_thumb = 'assets/media/'.$result_img['thumb_img'];
+	        $img->save();
+        }
+        if($data['sub2']){
+			$result_img = $this->updateImageMotel($data['sub2']);
+	        $img = new Imgs();
+	        $img->new_id = $new->id;
+	        $img->sub_image = 'assets/media/'.$result_img['img'];
+	        $img->sub_image_thumb = 'assets/media/'.$result_img['thumb_img'];
+	        $img->save();
+    	}
+    	if($data['sub3']){
+			$result_img = $this->updateImageMotel($data['sub3']);
+	        $img = new Imgs();
+	        $img->new_id = $new->id;
+	        $img->sub_image = 'assets/media/'.$result_img['img'];
+	        $img->sub_image_thumb = 'assets/media/'.$result_img['thumb_img'];
+	        $img->save();
+    	}
+    	if($data['sub4']){
+			$result_img = $this->updateImageMotel($data['sub4']);
+	        $img = new Imgs();
+	        $img->new_id = $new->id;
+	        $img->sub_image = 'assets/media/'.$result_img['img'];
+	        $img->sub_image_thumb = 'assets/media/'.$result_img['thumb_img'];
+	        $img->save();
+    	}
 
        	return true;
         //$new->sub1 = 'assets/media/'.$this->updateImageProfile($data['image']);

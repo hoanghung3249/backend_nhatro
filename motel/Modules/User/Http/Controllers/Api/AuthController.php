@@ -48,6 +48,7 @@ class AuthController extends ApiController
      *   operationId="api.members.getLogout",
      *   produces={"application/json"},
      *   tags={"Authenticate"},
+     *   @SWG\Parameter(name="MT-API-KEY",in="header",required=true,type="string",description="Authorise connection",default="dev-api-key"),
      *   @SWG\Response(response=401, description="unauthorized"),
      *   @SWG\Response(response=200, description="Success"),
      *   security={
@@ -85,6 +86,7 @@ class AuthController extends ApiController
      *     required=true,
      *    @SWG\Schema(ref="#/definitions/Customer")
      *   ),
+     *   @SWG\Parameter(name="MT-API-KEY",in="header",required=true,type="string",description="Authorise connection",default="dev-api-key"),
      *   @SWG\Response(response=101, description="Wrong email or password"),
      *   @SWG\Response(response=102, description="You need to confirm your account"),
      *   @SWG\Response(response=500, description="internal server error")
@@ -93,13 +95,13 @@ class AuthController extends ApiController
     public function postLogin(Request $request)
     {
         $customer = User::where('email',$request->email)->first();
-        $role_user = RoleUser::where('user_id',$customer->id)->first();
+        
 
         if(isset($customer) && !empty($customer))
         {
             if (Hash::check($request->password, $customer->password) && $customer->status !=3)
             {
-
+                    $role_user = RoleUser::where('user_id',$customer->id)->first();
                     $token = $customer->createToken('Login Token')->accessToken;
                     $item = $customer->withAccessToken($token);
                     $data = [
@@ -142,6 +144,7 @@ class AuthController extends ApiController
      *         required=false,
      *         @SWG\Schema(ref="#/definitions/Register")
      *     ),
+     *   @SWG\Parameter(name="MT-API-KEY",in="header",required=true,type="string",description="Authorise connection",default="dev-api-key"),
      *     @SWG\Response(
      *         response=405,
      *         description="Invalid input"
@@ -218,6 +221,7 @@ class AuthController extends ApiController
      *         required=false,
      *         @SWG\Schema(ref="#/definitions/Changepassword")
      *     ),
+     *   @SWG\Parameter(name="MT-API-KEY",in="header",required=true,type="string",description="Authorise connection",default="dev-api-key"),
      *     @SWG\Response(
      *         response=405,
      *         description="Invalid input"
@@ -259,6 +263,7 @@ class AuthController extends ApiController
      *         required=true,
      *         @SWG\Schema(ref="#/definitions/Forgotpassword")
      *     ),
+     *   @SWG\Parameter(name="MT-API-KEY",in="header",required=true,type="string",description="Authorise connection",default="dev-api-key"),
      *     @SWG\Response(
      *         response=405,
      *         description="Invalid input"

@@ -11,11 +11,11 @@
 
 @stop
 <h1>
-    {{ trans('Tạo mới phòng') }}
+    {{ trans('Tạo mới thủ tục') }}
 </h1>
 <ol class="breadcrumb">
     <li><a href="{{ URL::route('dashboard.index') }}"><i class="fa fa-dashboard"></i> {{ trans('core::core.breadcrumb.home') }}</a></li>
-    <li class=""><a href="{{ URL::route('admin.room.room.index') }}">{{ trans('Danh sách phòng') }}</a></li>
+    <li class=""><a href="{{ URL::route('admin.bookings.bookings.index') }}">{{ trans('Phòng đang được thuê') }}</a></li>
     <li class="active">{{ trans('user::users.breadcrumb.new') }}</li>
 </ol>
 @stop
@@ -53,7 +53,7 @@
                                 </div>
                             </div>
                             <div class="col-sm-4">
-                                <div class="form-group{{ $errors->has('unit_price') ? ' has-error' : '' }}">
+                                <div class="form-group{{ $errors->has('erea') ? ' has-error' : '' }}">
                                     {!! Form::label('unit_price', trans('Giá phòng (VNĐ)')) !!}
                                     {!! Form::number('unit_price', old('unit_price'), ['class' => 'form-control', 'placeholder' => trans('Ví dụ: 5000000')]) !!}
                                     {!! $errors->first('unit_price', '<span class="help-block">:message</span>') !!}

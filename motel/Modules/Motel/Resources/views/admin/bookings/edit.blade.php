@@ -2,21 +2,16 @@
 
 @section('content-header')
 @section('styles')
-{{--     {!! Theme::style('css/vendor/datepicker/datepicker3.css') !!}
-    {!! Theme::script('js/vendor/datepicker/bootstrap-datepicker.js') !!} --}}
-    {{-- <script type="text/javascript" src ="/modules/media/js/media-partial.js"></script> --}}
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" />
-
+    {!! Theme::style('css/vendor/datepicker/datepicker3.css') !!}
+    {!! Theme::script('js/vendor/datepicker/bootstrap-datepicker.js') !!}
 @stop
 <h1>
-    {{ trans('Tạo mới phòng') }}
+    {{ trans('Chỉnh sửa phòng') }}
 </h1>
 <ol class="breadcrumb">
     <li><a href="{{ URL::route('dashboard.index') }}"><i class="fa fa-dashboard"></i> {{ trans('core::core.breadcrumb.home') }}</a></li>
-    <li class=""><a href="{{ URL::route('admin.room.room.index') }}">{{ trans('Danh sách phòng') }}</a></li>
-    <li class="active">{{ trans('user::users.breadcrumb.new') }}</li>
+    <li class=""><a href="{{ URL::route('admin.room.room.index') }}">{{ trans('Quản lý phòng') }}</a></li>
+    <li class="active">{{ trans('Edit') }}</li>
 </ol>
 @stop
 
@@ -30,7 +25,10 @@
     </dl>
 @stop
 @section('content')
-{!! Form::open(['route' => 'admin.room.room.store', 'method' => 'post']) !!}
+{{-- {!! Form::open(['route' => 'admin.vehicles.vehicles.store', 'method' => 'post']) !!} --}}
+{{ Form::model($room, ['route' => ['admin.room.room.update', $room],'method' => 'put']) }}
+
+
 <div class="row">
     <div class="col-md-12">
         <div class="nav-tabs-custom">
@@ -53,7 +51,7 @@
                                 </div>
                             </div>
                             <div class="col-sm-4">
-                                <div class="form-group{{ $errors->has('unit_price') ? ' has-error' : '' }}">
+                                <div class="form-group{{ $errors->has('erea') ? ' has-error' : '' }}">
                                     {!! Form::label('unit_price', trans('Giá phòng (VNĐ)')) !!}
                                     {!! Form::number('unit_price', old('unit_price'), ['class' => 'form-control', 'placeholder' => trans('Ví dụ: 5000000')]) !!}
                                     {!! $errors->first('unit_price', '<span class="help-block">:message</span>') !!}
@@ -79,7 +77,7 @@
                     </div>
                 </div>
                 <div class="box-footer">
-                    <button type="submit" class="btn btn-primary btn-flat">{{ trans('user::button.create') }}</button>
+                    <button type="submit" class="btn btn-primary btn-flat">{{ trans('Update') }}</button>
                     <a class="btn btn-danger pull-right btn-flat" href="{{ URL::route('admin.room.room.index')}}"><i class="fa fa-times"></i> {{ trans('user::button.cancel') }}</a>
                 </div>
             </div>

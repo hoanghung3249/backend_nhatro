@@ -83,4 +83,99 @@ $router->group(['prefix' =>'/motel'], function (Router $router) {
         'uses' => 'RoomController@bulkDelete',
         'middleware' => 'can:room.room.destroy',
     ]);
+
+
+    //Bookings
+    $router->get('bookings', [
+        'as' => 'admin.bookings.bookings.index',
+        'uses' => 'BookingsController@index',
+        'middleware' => 'can:room.room.index',
+    ]);
+    $router->get('bookings-datatable', [
+        'as' => 'admin.bookings.bookings.indextable',
+        'uses' => 'BookingsController@indextable',
+        'middleware' => 'can:room.room.index',
+    ]);
+    $router->get('bookings/create', [
+        'as' => 'admin.bookings.bookings.create',
+        'uses' => 'BookingsController@create',
+        'middleware' => 'can:room.room.create',
+    ]);
+
+
+
+
+
+
+
+
+
+
+
+    //Customer
+    $router->get('customer-list', [
+        'as' => 'admin.customer.customer.index',
+        'uses' => 'CustomerController@index',
+        'middleware' => 'can:room.room.index',
+    ]);
+    $router->get('customer-list-datatable', [
+        'as' => 'admin.customer.customer.indextable',
+        'uses' => 'CustomerController@indextable',
+        'middleware' => 'can:room.room.index',
+    ]);
+    $router->get('customer-detail', [
+        'as' => 'admin.customer.customer.customerdetail',
+        'uses' => 'CustomerController@getCustomerDetail',
+        'middleware' => 'can:room.room.index',
+    ]);
+    $router->get('customer/create', [
+        'as' => 'admin.customer.customer.create',
+        'uses' => 'CustomerController@create',
+        'middleware' => 'can:room.room.index',
+    ]);
+    $router->post('customer/create', [
+        'as' => 'admin.customer.customer.store',
+        'uses' => 'CustomerController@store',
+        'middleware' => 'can:room.room.create',
+    ]);
+    $router->get('customer/{id}/edit', [
+        'as' => 'admin.customer.customer.edit',
+        'uses' => 'CustomerController@edit',
+        'middleware' => 'can:room.room.edit',
+    ]);
+    $router->put('customer/{id}/edit', [
+        'as' => 'admin.customer.customer.update',
+        'uses' => 'CustomerController@update',
+        'middleware' => 'can:room.room.edit',
+    ]);
+    $router->delete('customer-delete/{id}', [
+        'as' => 'admin.customer.customer.delete',
+        'uses' => 'CustomerController@delete',
+        'middleware' => 'can:room.room.destroy',
+    ]);
+    $router->get('bulk-delete-customer', [
+        'as' => 'admin.customer.customer.bulkdelete',
+        'uses' => 'CustomerController@bulkDelete',
+        'middleware' => 'can:room.room.destroy',
+    ]);
+
+
+
+
+    //Config
+    $router->get('config', [
+        'as' => 'admin.config.config.index',
+        'uses' => 'ConfigController@index',
+        'middleware' => 'can:room.room.index',
+    ]);
+    $router->get('config-datatable', [
+        'as' => 'admin.config.config.indextable',
+        'uses' => 'ConfigController@indextable',
+        'middleware' => 'can:room.room.index',
+    ]);
+    $router->post('config-post', [
+        'as' => 'admin.config.config.post',
+        'uses' => 'ConfigController@postConfig',
+        'middleware' => 'can:room.room.index',
+    ]);
 });

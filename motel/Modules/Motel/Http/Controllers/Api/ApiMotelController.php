@@ -34,6 +34,7 @@ class ApiMotelController extends ApiController
      *   operationId="",
      *   produces={"application/json"},
      *   tags={"Motel"},
+     *   @SWG\Parameter(name="MT-API-KEY",in="header",required=true,type="string",description="Authorise connection",default="dev-api-key"),
      *   @SWG\Response(response=401, description="unauthorized"),
      *   @SWG\Response(response=200, description="Success"),
      *   security={
@@ -59,6 +60,7 @@ class ApiMotelController extends ApiController
      *   operationId="",
      *   produces={"application/json"},
      *   tags={"Motel"},
+     *   @SWG\Parameter(name="MT-API-KEY",in="header",required=true,type="string",description="Authorise connection",default="dev-api-key"),
      *   @SWG\Response(response=401, description="unauthorized"),
      *   @SWG\Response(response=200, description="Success"),
      *   security={
@@ -139,6 +141,7 @@ class ApiMotelController extends ApiController
      *         required=true,
      *         type="string"
      *     ),
+     *   @SWG\Parameter(name="MT-API-KEY",in="header",required=true,type="string",description="Authorise connection",default="dev-api-key"),
      *     produces={"application/json"},
      *     @SWG\Response(
      *         response="200",
@@ -198,6 +201,7 @@ class ApiMotelController extends ApiController
      *     type="integer",
      *     default="1"
      *   ),
+     * @SWG\Parameter(name="MT-API-KEY",in="header",required=true,type="string",description="Authorise connection",default="dev-api-key"),
      *   produces={"application/json"},
      *   tags={"Motel"},
      *   @SWG\Response(response=401, description="unauthorized"),
@@ -256,6 +260,15 @@ class ApiMotelController extends ApiController
      *     required=false,
      *     type="string",
      *   ),
+     *   @SWG\Parameter(
+     *     description="",
+     *     in="query",
+     *     name="unit_price",
+     *     required=false,
+     *     type="integer",
+     *     default="0",
+     *   ),
+     *   @SWG\Parameter(name="MT-API-KEY",in="header",required=true,type="string",description="Authorise connection",default="dev-api-key"),
      *   produces={"application/json"},
      *   tags={"Motel"},
      *   @SWG\Response(response=401, description="unauthorized"),
@@ -269,7 +282,8 @@ class ApiMotelController extends ApiController
         $latitude = $request->latitude;
         $longitude = $request->longitude;
         $limit = $request->limit;
-        $data = $this->motel->getListFilter($latitude,$longitude,$limit);
+        $unit_price = $request->unit_price;
+        $data = $this->motel->getListFilter($latitude,$longitude,$limit,$unit_price);
         //return $data;
 
         //$news = $news->toarray();
@@ -296,28 +310,28 @@ class ApiMotelController extends ApiController
      *         description="file to upload",
      *         in="formData",
      *         name="sub1",
-     *         required=true,
+     *         required=false,
      *         type="file"
      *     ),
      *     @SWG\Parameter(
      *         description="file to upload",
      *         in="formData",
      *         name="sub2",
-     *         required=true,
+     *         required=false,
      *         type="file"
      *     ),
      *     @SWG\Parameter(
      *         description="file to upload",
      *         in="formData",
      *         name="sub3",
-     *         required=true,
+     *         required=false,
      *         type="file"
      *     ),
      *     @SWG\Parameter(
      *         description="file to upload",
      *         in="formData",
      *         name="sub4",
-     *         required=true,
+     *         required=false,
      *         type="file"
      *     ),
      *     @SWG\Parameter(
@@ -376,6 +390,7 @@ class ApiMotelController extends ApiController
      *         required=true,
      *         type="string"
      *     ),
+     *   @SWG\Parameter(name="MT-API-KEY",in="header",required=true,type="string",description="Authorise connection",default="dev-api-key"),
      *     produces={"application/json"},
      *     @SWG\Response(
      *         response="200",

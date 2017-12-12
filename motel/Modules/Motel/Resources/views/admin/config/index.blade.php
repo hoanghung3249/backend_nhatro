@@ -2,11 +2,11 @@
 
 @section('content-header')
 <h1>
-    {{ trans('Quản lý phòng trọ') }}
+    {{ trans('Cấu hình chi phí') }}
 </h1>
 <ol class="breadcrumb">
     <li><a href="{{ URL::route('dashboard.index') }}"><i class="fa fa-dashboard"></i> {{ trans('core::core.breadcrumb.home') }}</a></li>
-    <li class="active">{{ trans('Phòng trọ') }}</li>
+    <li class="active">{{ trans('Cấu hình') }}</li>
 </ol>
 @stop
 
@@ -18,36 +18,61 @@
 </style>
 <div class="row">
     <div class="col-xs-12">
-        <div class="row">
+{{--         <div class="row">
             <div class="btn-group pull-right" style="margin: 0 15px 15px 0;">
-                <a href="{{ route('admin.room.room.create') }}" class="btn btn-primary btn-flat" style="padding: 4px 10px;">
-                    <i class="fa fa-pencil"></i> {{ trans('Tạo mới phòng trọ') }}
+                <a href="{{ route('admin.bookings.bookings.create') }}" class="btn btn-primary btn-flat" style="padding: 4px 10px;">
+                    <i class="fa fa-pencil"></i> {{ trans('Tạo thủ tục thuê phòng') }}
                 </a>
             </div>
-        </div>
+        </div> --}}
         <div class="box box-primary">
             <div class="box-header">
             </div>
             <!-- /.box-header -->
             <div class="box-body table-responsive">
-                <table id="tablevehilce" class="table table-bordered table-hover " cellspacing="0" width="100%">
+            <form action="{{ route('admin.config.config.post') }}" method="POST" class="form-inline" style="padding-top: 15px">
+            {{ csrf_field() }}
+                <table id="tablevehilce" class="table table-bordered table-hover data-table" cellspacing="0" width="100%">
                     <thead>
                         <tr>
-                            <th>Check box</th>
-                            <th>Tên Phòng</th>
-                            <th>Diện tích</th>
-                            <th>Giá Phòng (Đơn vị)</th>
-{{--                             <th>Tiền điện (Đơn vị)</th>
-                            <th>Tiền nước (Đơn vị)</th> --}}
-                            <th>Trạng thái</th>
-                            <th>Chỉnh sửa / Xoá</th>           
+                            <th width="30%">Phí</th>
+                            <th width="40%">Đơn giá</th>
+                            <th width="30%">Hiệu lực từ</th>         
                         </tr>
                     </thead>
+                    <tbody>
+                        <tr>
+                            <td>Tiền điện</td>
+                            <td><input class="form-control" type="number" min="0" onkeypress='return event.charCode >= 48 && event.charCode <= 57' name="payment_on_electricity" value="{{$item->payment_on_electricity or null}}"> /KwH</td>
+                            <td>{{$item->getUpdatedAt()}}</td>
+                        </tr>
+                        <tr>
+                            <td>Tiền nước</td>
+                            <td><input class="form-control" type="number" min="0" onkeypress='return event.charCode >= 48 && event.charCode <= 57' name="payment_of_water" value="{{$item->payment_of_water or null}}"> /m³</td>
+                            <td>{{$item->getUpdatedAt()}}</td>
+                        </tr>
+                        <tr>
+                            <td>Tiền đổ rác</td>
+                            <td><input class="form-control" type="number" min="0" onkeypress='return event.charCode >= 48 && event.charCode <= 57' name="trash" value="{{$item->trash or null}}"></td>
+                            <td>{{$item->getUpdatedAt()}}</td>
+                        </tr>
+                        <tr>
+                            <td>Tiền Internet</td>
+                            <td><input class="form-control" type="number" min="0" onkeypress='return event.charCode >= 48 && event.charCode <= 57' name="internet" value="{{$item->internet or null}}"></td>
+                            <td>{{$item->getUpdatedAt()}}</td>
+                        </tr>
+
+                        <tr>
+                            <td>Tiền giữ xe</td>
+                            <td><input class="form-control" type="number" min="0" onkeypress='return event.charCode >= 48 && event.charCode <= 57'   name="parking" value="{{$item->parking or null}}"></td>
+                            <td>{{$item->getUpdatedAt()}}</td>
+                        </tr>
+                    </tbody>
                 </table>
-
-
+                <button class="btn btn-primary btn-flat" type="submit" style="padding: 5px 12px;"><i class="fa fa-floppy-o"></i> Lưu lại</button>
+                </form>
+            
                 
-                <button type="button" class="btn btn-danger btn-flat" data-toggle="modal" data-target="#myModal"><i class="fa fa-trash-o" aria-hidden="true"> Xoá các mục đã chọn</i></button>
                 {{-- <a href="" class="btn btn-info btn-flat" >Export Vehicle</a> --}}
 
 
@@ -86,7 +111,7 @@
 
 @push('js-stack')
 <?php $locale = App::getLocale(); ?>
-<script type="text/javascript">
+{{-- <script type="text/javascript">
 jQuery(document).ready(function($) {
     //alert(123);
     $("#tablevehilce").on('click',".check-stt",function(){
@@ -114,14 +139,14 @@ jQuery(document).ready(function($) {
         
     })
 });
-</script>
+</script> --}}
 
-<script type="text/javascript">
+{{-- <script type="text/javascript">
     $(document).ready(function(){
     $('#tablevehilce').DataTable({
         processing:false,
         serverSide:true,
-        ajax:"{{ route('admin.room.room.indextable') }}",
+        ajax:"{{ route('admin.config.config.indextable') }}",
         columnDefs: [ {
             orderable: false,
             className: 'select-checkbox',
@@ -132,14 +157,16 @@ jQuery(document).ready(function($) {
             selector: 'td:first-child'
         },
         columns:[
-            {data:'check',searchable:false},
-            {data:'name',searchable:true},
-            {data:'erea',searchable:true},
-            {data:'giaphong',searchable:true},
+            // {data:'check',searchable:false},
+            {data:'phi',searchable:true},
+            // {data:'ngaythue',searchable:true},
+            // {data:'ngaytra',searchable:true},
+            // {data:'giaphong',searchable:true},
             // {data:'tiendien',searchable:true},
             // {data:'tiennuoc',searchable:true},
-            {data:'select',searchable:false},
-            {data:'button',searchable:false},
+            // {data:'tiencoc',searchable:true},
+            // // {data:'customer',searchable:false},
+            // {data:'button',searchable:false},
 
         ],
     });
@@ -173,9 +200,7 @@ jQuery(document).ready(function($) {
 
 
 </script>
-
-
-
+ --}}
 
 
 
@@ -192,7 +217,7 @@ jQuery(document).ready(function($) {
             "paginate": true,
             "lengthChange": true,
             "filter": true,
-            "sort": true,
+            "sort": false,
             "info": true,
             "autoWidth": true,
             "order": [[ 0, "desc" ]],
@@ -201,5 +226,6 @@ jQuery(document).ready(function($) {
             }
         });
     });
+
 </script>
 @endpush

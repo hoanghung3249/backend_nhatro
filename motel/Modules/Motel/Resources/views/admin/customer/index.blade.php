@@ -2,11 +2,11 @@
 
 @section('content-header')
 <h1>
-    {{ trans('Quản lý phòng trọ') }}
+    {{ trans('Quản lý khách hàng') }}
 </h1>
 <ol class="breadcrumb">
     <li><a href="{{ URL::route('dashboard.index') }}"><i class="fa fa-dashboard"></i> {{ trans('core::core.breadcrumb.home') }}</a></li>
-    <li class="active">{{ trans('Phòng trọ') }}</li>
+    <li class="active">{{ trans('Quản lý khách hàng') }}</li>
 </ol>
 @stop
 
@@ -20,8 +20,8 @@
     <div class="col-xs-12">
         <div class="row">
             <div class="btn-group pull-right" style="margin: 0 15px 15px 0;">
-                <a href="{{ route('admin.room.room.create') }}" class="btn btn-primary btn-flat" style="padding: 4px 10px;">
-                    <i class="fa fa-pencil"></i> {{ trans('Tạo mới phòng trọ') }}
+                <a href="{{ route('admin.customer.customer.create') }}" class="btn btn-primary btn-flat" style="padding: 4px 10px;">
+                    <i class="fa fa-pencil"></i> {{ trans('Tạo mới khách hàng') }}
                 </a>
             </div>
         </div>
@@ -34,13 +34,12 @@
                     <thead>
                         <tr>
                             <th>Check box</th>
-                            <th>Tên Phòng</th>
-                            <th>Diện tích</th>
-                            <th>Giá Phòng (Đơn vị)</th>
-{{--                             <th>Tiền điện (Đơn vị)</th>
-                            <th>Tiền nước (Đơn vị)</th> --}}
-                            <th>Trạng thái</th>
-                            <th>Chỉnh sửa / Xoá</th>           
+                            <th>Họ Tên</th>
+                            <th>Ngày Sinh</th>
+                            <th>Giới Tính</th>
+                            <th>Số Điện Thoại</th>
+                            <th>Phòng Đang Ở</th>
+                            <th>Chi Tiết / Xoá</th>           
                         </tr>
                     </thead>
                 </table>
@@ -86,7 +85,7 @@
 
 @push('js-stack')
 <?php $locale = App::getLocale(); ?>
-<script type="text/javascript">
+{{-- <script type="text/javascript">
 jQuery(document).ready(function($) {
     //alert(123);
     $("#tablevehilce").on('click',".check-stt",function(){
@@ -114,14 +113,36 @@ jQuery(document).ready(function($) {
         
     })
 });
-</script>
+</script> --}}
 
 <script type="text/javascript">
     $(document).ready(function(){
+
+    $("body").on('click', '.chitiet', function() {
+      var idcus = $(this).attr("idcus");
+      $.ajax({
+        url: "{{ route('admin.customer.customer.customerdetail') }}",
+        type: 'GET',
+        dataType: 'HTML',
+        data: {
+          idcus : idcus,
+        },
+      })
+      .done(function(result) {
+        $("#modal-detail-customer").modal('show');
+        $(".modal-body").html(result);
+
+      });
+    });
+
+
+
+
+
     $('#tablevehilce').DataTable({
         processing:false,
         serverSide:true,
-        ajax:"{{ route('admin.room.room.indextable') }}",
+        ajax:"{{ route('admin.customer.customer.indextable') }}",
         columnDefs: [ {
             orderable: false,
             className: 'select-checkbox',
@@ -133,12 +154,11 @@ jQuery(document).ready(function($) {
         },
         columns:[
             {data:'check',searchable:false},
-            {data:'name',searchable:true},
-            {data:'erea',searchable:true},
-            {data:'giaphong',searchable:true},
-            // {data:'tiendien',searchable:true},
-            // {data:'tiennuoc',searchable:true},
-            {data:'select',searchable:false},
+            {data:'fullname',searchable:true},
+            {data:'dob',searchable:true},
+            {data:'gender',searchable:true},
+            {data:'phone',searchable:true},
+            {data:'tenphong',searchable:true},
             {data:'button',searchable:false},
 
         ],
@@ -150,7 +170,7 @@ jQuery(document).ready(function($) {
           id[i] = $(this).val();
              //alert(id[i]);
           $.ajax({
-              url: "{{ route('admin.room.room.bulkdelete') }}",
+              url: "{{ route('admin.customer.customer.bulkdelete') }}",
               type: 'GET',
               dataType: 'JSON',
               data: {id: id[i]},
@@ -159,11 +179,11 @@ jQuery(document).ready(function($) {
             //console.log(data)
             if(data == 2){
                 console.log(data)
-                window.location = "{{ route('admin.room.room.index') }}";
+                window.location = "{{ route('admin.customer.customer.index') }}";
             }
             else{
                 //window.location
-                window.location = "{{ route('admin.room.room.index') }}";                
+                window.location = "{{ route('admin.customer.customer.index') }}";                
             }
           })
         });
@@ -173,8 +193,6 @@ jQuery(document).ready(function($) {
 
 
 </script>
-
-
 
 
 

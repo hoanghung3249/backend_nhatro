@@ -1,6 +1,6 @@
 <?php
 use Illuminate\Routing\Router;
-$router->group(['prefix' =>'/motel'], function (Router $router) {
+$router->group(['prefix' =>'/motel','middleware'=>['auth:api','motel.api.key']], function (Router $router) {
 	$router->get('send-mail-again', [
         'as' => 'admin.motel.motel.sendmailagain',
         'uses' => 'ApiMotelController@SendMailAgain',

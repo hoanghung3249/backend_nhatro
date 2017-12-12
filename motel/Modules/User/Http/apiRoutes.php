@@ -1,13 +1,13 @@
 <?php
 use Illuminate\Routing\Router;
 /** @var Router $router */
-$router->group(['prefix' =>'/members', 'middleware' => ['auth:api']], function (Router $router) {
+$router->group(['prefix' =>'/members', 'middleware' => ['auth:api','motel.api.key']], function (Router $router) {
         $router->get('getLogout',['uses'=>'AuthController@getLogout','as'=>'api.members.members.getLogout', 'before'=>'is_guest']);
         $router->post('change-password',['uses'=>'AuthController@postChangepassword','as'=>'api.members.members.postchangepassword', 'before'=>'is_guest']);
         
 });
 //,'middleware' => ['apiLog']
-$router->group(['prefix' =>'/members'], function (Router $router) {
+$router->group(['prefix' =>'/members','middleware'=>'motel.api.key'], function (Router $router) {
        $router->post('postLogin',['uses'=>'AuthController@postLogin','as'=>'api.members.members.postLogin', 'before'=>'is_guest']);
        $router->post('postSignup',['uses'=>'AuthController@postSignup','as'=>'api.members.members.postSignup', 'before'=>'is_guest']);
        $router->get('senttomail',['uses'=>'AuthController@activeUser','as'=>'api.members.members.senttomail', 'before'=>'is_guest']);

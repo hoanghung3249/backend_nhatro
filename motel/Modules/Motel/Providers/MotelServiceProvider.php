@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Modules\Core\Traits\CanPublishConfiguration;
 use Modules\Core\Events\BuildingSidebar;
 use Modules\Motel\Events\Handlers\RegisterMotelSidebar;
+use Modules\Motel\Http\Middleware\MotelAuthorisedApiKey;
 
 class MotelServiceProvider extends ServiceProvider
 {
@@ -22,6 +23,15 @@ class MotelServiceProvider extends ServiceProvider
      *
      * @return void
      */
+
+    /**
+     * @var array
+     */
+    protected $middleware = [
+        'motel.api.key' => MotelAuthorisedApiKey::class,
+    ];
+
+
     public function register()
     {
         $this->registerBindings();
@@ -30,6 +40,7 @@ class MotelServiceProvider extends ServiceProvider
 
     public function boot()
     {
+        $this->registerMiddleware();
         $this->publishConfig('motel', 'permissions');
 
         $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
@@ -61,5 +72,11 @@ class MotelServiceProvider extends ServiceProvider
         );
 // add bindings
 
+    }
+    private function registerMiddleware()
+    {
+        foreach ($this->middleware as $name => $class) {
+            $this->app['router']->aliasMiddleware($name, $class);
+        }
     }
 }

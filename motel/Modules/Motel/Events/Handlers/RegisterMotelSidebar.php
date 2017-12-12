@@ -47,7 +47,7 @@ class RegisterMotelSidebar implements \Maatwebsite\Sidebar\SidebarExtender
                 $item->item(trans('Phòng đang được thuê'), function (Item $item) {
                     $item->weight(0);
                     $item->icon('fa fa-home');
-                    $item->route('admin.room.room.index');
+                    $item->route('admin.bookings.bookings.index');
                     $item->authorize(
                         $this->auth->hasAccess('user.users.index')
                     );
@@ -55,7 +55,7 @@ class RegisterMotelSidebar implements \Maatwebsite\Sidebar\SidebarExtender
                 $item->item(trans('Danh sách người thuê'), function (Item $item) {
                     $item->weight(0);
                     $item->icon('fa fa-users');
-                    $item->route('admin.room.room.index');
+                    $item->route('admin.customer.customer.index');
                     $item->authorize(
                         $this->auth->hasAccess('user.users.index')
                     );
@@ -97,6 +97,14 @@ class RegisterMotelSidebar implements \Maatwebsite\Sidebar\SidebarExtender
                 $item->weight(0);
                 $item->icon('fa fa-money');
                 $item->route('admin.room.room.index');
+                $item->authorize(
+                    $this->auth->hasAccess('user.users.index')
+                );
+            });
+            $group->item(trans('Cấu hình'), function (Item $item) {
+                $item->weight(4);
+                $item->icon('fa fa-cogs');
+                $item->route('admin.config.config.index');
                 $item->authorize(
                     $this->auth->hasAccess('user.users.index')
                 );

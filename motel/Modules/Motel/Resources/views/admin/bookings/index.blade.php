@@ -2,7 +2,7 @@
 
 @section('content-header')
 <h1>
-    {{ trans('Quản lý phòng trọ') }}
+    {{ trans('Phòng đang được thuê') }}
 </h1>
 <ol class="breadcrumb">
     <li><a href="{{ URL::route('dashboard.index') }}"><i class="fa fa-dashboard"></i> {{ trans('core::core.breadcrumb.home') }}</a></li>
@@ -20,8 +20,8 @@
     <div class="col-xs-12">
         <div class="row">
             <div class="btn-group pull-right" style="margin: 0 15px 15px 0;">
-                <a href="{{ route('admin.room.room.create') }}" class="btn btn-primary btn-flat" style="padding: 4px 10px;">
-                    <i class="fa fa-pencil"></i> {{ trans('Tạo mới phòng trọ') }}
+                <a href="{{ route('admin.bookings.bookings.create') }}" class="btn btn-primary btn-flat" style="padding: 4px 10px;">
+                    <i class="fa fa-pencil"></i> {{ trans('Tạo thủ tục thuê phòng') }}
                 </a>
             </div>
         </div>
@@ -34,12 +34,15 @@
                     <thead>
                         <tr>
                             <th>Check box</th>
-                            <th>Tên Phòng</th>
-                            <th>Diện tích</th>
+                            <th>Tên phòng</th>
+                            <th>Ngày thuê phòng</th>
+                            <th>Ngày trả phòng</th>
                             <th>Giá Phòng (Đơn vị)</th>
 {{--                             <th>Tiền điện (Đơn vị)</th>
                             <th>Tiền nước (Đơn vị)</th> --}}
-                            <th>Trạng thái</th>
+                            <th>Tiền cọc (Đơn vị)</th>
+                            {{-- <th>Người thuê</th> --}}
+                            {{-- <th>Trạng thái</th> --}}
                             <th>Chỉnh sửa / Xoá</th>           
                         </tr>
                     </thead>
@@ -121,7 +124,7 @@ jQuery(document).ready(function($) {
     $('#tablevehilce').DataTable({
         processing:false,
         serverSide:true,
-        ajax:"{{ route('admin.room.room.indextable') }}",
+        ajax:"{{ route('admin.bookings.bookings.indextable') }}",
         columnDefs: [ {
             orderable: false,
             className: 'select-checkbox',
@@ -133,12 +136,14 @@ jQuery(document).ready(function($) {
         },
         columns:[
             {data:'check',searchable:false},
-            {data:'name',searchable:true},
-            {data:'erea',searchable:true},
+            {data:'tenphong',searchable:true},
+            {data:'ngaythue',searchable:true},
+            {data:'ngaytra',searchable:true},
             {data:'giaphong',searchable:true},
             // {data:'tiendien',searchable:true},
             // {data:'tiennuoc',searchable:true},
-            {data:'select',searchable:false},
+            {data:'tiencoc',searchable:true},
+            // {data:'customer',searchable:false},
             {data:'button',searchable:false},
 
         ],

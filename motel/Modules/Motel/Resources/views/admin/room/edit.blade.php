@@ -51,14 +51,14 @@
                                 </div>
                             </div>
                             <div class="col-sm-4">
-                                <div class="form-group{{ $errors->has('erea') ? ' has-error' : '' }}">
+                                <div class="form-group{{ $errors->has('unit_price') ? ' has-error' : '' }}">
                                     {!! Form::label('unit_price', trans('Giá phòng (VNĐ)')) !!}
                                     {!! Form::number('unit_price', old('unit_price'), ['class' => 'form-control', 'placeholder' => trans('Ví dụ: 5000000')]) !!}
                                     {!! $errors->first('unit_price', '<span class="help-block">:message</span>') !!}
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+{{--                         <div class="row">
                             <div class="col-sm-6">
                             <div class="form-group{{ $errors->has('payment_on_electricity') ? ' has-error' : '' }}">
                                     {!! Form::label('payment_on_electricity', trans('Tiền điện (/Kwh)')) !!}
@@ -73,7 +73,7 @@
                                     {!! $errors->first('payment_of_water', '<span class="help-block">:message</span>') !!}
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
                 <div class="box-footer">

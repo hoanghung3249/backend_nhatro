@@ -10,6 +10,47 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" />
 
 @stop
+<style>
+.suggest-holder {
+    width: 150px;
+}
+    .suggest-holder input {
+        width: 146px;
+        border: 1px solid rgba(0,120,0,.6);
+    }
+    .suggest-holder ul {
+        display: none;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        border: 1px solid rgba(0,120,0,.6);
+        margin-top: -6px;
+    }
+        .suggest-holder li {
+            padding: 5px;
+        }
+        .suggest-holder li:hover {
+            cursor: pointer;
+        }
+        .ui-state-active{
+            background: rgba(0,120,0, .2)!important;
+        }
+        /*#9bd0ef*/
+/*        .suggest-holder li:hover, li.active {
+            background: rgba(0,120,0, .2);
+        }*/
+            .suggest-name {
+                font-weight: bold;
+                display: block;
+                height: 15px;
+            }
+            .suggest-description {
+                font-style: italic;
+                font-size: 11px;
+                color: #999;
+            }
+
+</style>
 <h1>
     {{ trans('Tạo mới thủ tục') }}
 </h1>
@@ -38,44 +79,79 @@
                 <div class="tab-pane active" id="tab_1-1">
                     <div class="box-body">
                         <div class="row">
-                            <div class="col-sm-4">
+                            <div class="col-sm-12">
+                            <div class="form-group{{ $errors->has('full_name') ? ' has-error' : '' }}">
+                                    {!! Form::label('full_name', trans('Họ tên')) !!}
+                                    {!! Form::text('full_name', old('full_name'), ['id'=> 'full_name','class' => 'form-control', 'placeholder' => trans('Nhập vào tên phòng')]) !!}
+                                    {!! $errors->first('name', '<span class="help-block">:message</span>') !!}
+                                </div>
+{{--                                 <div class="beta-comp">
+                                    <form role="search" method="get" id="searchform" action="">
+                                        <input type="text" value="" name="s" id="s" placeholder="Nhập từ khóa..." />
+                                        <button class="fa fa-search" type="submit" id="searchsubmit"></button>
+                                    </form>
+                                </div> --}}
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                            <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
+                                    {!! Form::label('name', trans('Ngày thuê')) !!}
+                                    {!! Form::text('name', old('name'), ['class' => 'form-control', 'placeholder' => trans('Nhập vào ngày thuê phòng')]) !!}
+                                    {!! $errors->first('name', '<span class="help-block">:message</span>') !!}
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group{{ $errors->has('erea') ? ' has-error' : '' }}">
+                                    {!! Form::label('erea', trans('Tiền cọc')) !!}
+                                    {!! Form::number('erea', old('erea'), ['class' => 'form-control', 'placeholder' => trans('Ví dụ: 20')]) !!}
+                                    {!! $errors->first('erea', '<span class="help-block">:message</span>') !!}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
                             <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                                     {!! Form::label('name', trans('Tên phòng')) !!}
                                     {!! Form::text('name', old('name'), ['class' => 'form-control', 'placeholder' => trans('Nhập vào tên phòng')]) !!}
                                     {!! $errors->first('name', '<span class="help-block">:message</span>') !!}
                                 </div>
                             </div>
-                            <div class="col-sm-4">
-                                <div class="form-group{{ $errors->has('erea') ? ' has-error' : '' }}">
-                                    {!! Form::label('erea', trans('Diện tích (mét vuông)')) !!}
-                                    {!! Form::number('erea', old('erea'), ['class' => 'form-control', 'placeholder' => trans('Ví dụ: 20')]) !!}
-                                    {!! $errors->first('erea', '<span class="help-block">:message</span>') !!}
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group{{ $errors->has('erea') ? ' has-error' : '' }}">
-                                    {!! Form::label('unit_price', trans('Giá phòng (VNĐ)')) !!}
-                                    {!! Form::number('unit_price', old('unit_price'), ['class' => 'form-control', 'placeholder' => trans('Ví dụ: 5000000')]) !!}
-                                    {!! $errors->first('unit_price', '<span class="help-block">:message</span>') !!}
+                            <div class="col-sm-6">
+                            <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
+                                    {!! Form::label('name', trans('Gía phòng')) !!}
+                                    {!! Form::text('name', old('name'), ['class' => 'form-control', 'placeholder' => trans('Nhập vào gía phòng')]) !!}
+                                    {!! $errors->first('name', '<span class="help-block">:message</span>') !!}
                                 </div>
                             </div>
                         </div>
-{{--                         <div class="row">
-                            <div class="col-sm-6">
-                            <div class="form-group{{ $errors->has('payment_on_electricity') ? ' has-error' : '' }}">
-                                    {!! Form::label('payment_on_electricity', trans('Tiền điện (/Kwh)')) !!}
-                                    {!! Form::number('payment_on_electricity', old('payment_on_electricity'), ['class' => 'form-control', 'placeholder' => trans('Ví dụ: 3500')]) !!}
-                                    {!! $errors->first('payment_on_electricity', '<span class="help-block">:message</span>') !!}
-                                </div>
+                        <hr />
+                        <h1>Thành viên thuê phòng</h1>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table class="table table-bordered table-hover data-table" id="myTable" cellspacing="0" width="100%">
+                                     <thead>
+                                        <tr>
+                                            <th style="width:8%">Check box</th>
+                                            <th>Họ Tên</th>
+                                            <th>Ngày Sinh</th>
+                                            <th>Giới Tính</th>
+                                            <th>Số Điện Thoại</th> 
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+{{--                                         <tr>
+                                            <td>asd</td>
+                                            <td>asd</td>
+                                            <td>asd</td>
+                                            <td>asd</td>
+                                            <td>asd</td>
+                                        </tr> --}}
+                                    </tbody>
+                                </table>
                             </div>
-                            <div class="col-sm-6">
-                                <div class="form-group{{ $errors->has('payment_of_water') ? ' has-error' : '' }}">
-                                    {!! Form::label('payment_of_water', trans('Tiền nước (/m3)')) !!}
-                                    {!! Form::number('payment_of_water', old('payment_of_water'), ['class' => 'form-control', 'placeholder' => trans('Ví dụ: 20000')]) !!}
-                                    {!! $errors->first('payment_of_water', '<span class="help-block">:message</span>') !!}
-                                </div>
-                            </div>
-                        </div> --}}
+                        </div>
                     </div>
                 </div>
                 <div class="box-footer">
@@ -116,6 +192,35 @@
         $('#datetimepicker2').datetimepicker({
             format : 'YYYY-MM-DD',
         });
+
+
+
+        $( "#full_name" ).autocomplete({
+            source: "{{ route('admin.bookings.bookings.autocompletecustomer') }}",
+            minlenght:1,
+            autoFocus: true,
+            select:function(e,ui){
+                //console.log(ui);
+                // window.location.href = "dat-hang/"+ui.item.id;
+                $(this).val('');
+                var id_cus = ui.item.id;
+                $('#myTable > tbody:last-child').append('<tr><td><i class="fa fa-times del aria-hidden="true" style="cursor:pointer;color:red"><input id="id_cus" type="hidden" value='+ui.item.id+' ></i></td><td>'+ui.item.value+'</td><td>'+ui.item.dob+'</td><td>'+ui.item.gender+'</td><td>'+ui.item.phone+'</td></tr>');
+
+                
+                return false; 
+
+
+            },
+        })
+        .autocomplete( "instance" )._renderItem = function( ul, item ) {
+          return $( "<li>" )
+            .append("<li><span class='suggest-name'>" + item.value + "</span><span class='suggest-description'>" + item.phone + "</span></li>")
+            .appendTo( ul );
+        };
+        $("body").on("click",".del",function(){
+            $(this).parent().parent().remove();
+        })
+
     });
 </script>
 <script type="text/javascript">

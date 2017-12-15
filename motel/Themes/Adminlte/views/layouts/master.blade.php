@@ -10,6 +10,7 @@
     </title>
     <meta id="token" name="token" value="{{ csrf_token() }}" />
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+    <link rel="stylesheet" type="text/css" href="{{ URL::asset('css/jquery-ui.css') }}">
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css">
     @foreach($cssFiles as $css)
         <link media="all" type="text/css" rel="stylesheet" href="{{ URL::asset($css) }}">
@@ -119,6 +120,7 @@
 
 
 @section('scripts')
+<script type="text/javascript" src="{{ asset('js/jquery-ui.js') }}"></script>
 <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js')}}"></script>
 {{-- {!! JsValidator::formRequest('Modules\User\Http\Requests\CreateUserRequest') !!} --}}
 @show

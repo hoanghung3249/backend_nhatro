@@ -8,6 +8,7 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" />
+{{--   <base href="{{ asset('') }}"> --}}
 
 @stop
 <style>
@@ -179,6 +180,8 @@
 {!! JsValidator::formRequest('Modules\Motel\Http\Requests\CreateRoomRequest') !!}
 <script type="text/javascript">
     jQuery(document).ready(function() {
+
+        var arr_id = [];
         $(".js-example-basic-single").select2();
         $(".js-multiple").select2();
         $('.datepicker').datepicker({
@@ -204,21 +207,55 @@
                 // window.location.href = "dat-hang/"+ui.item.id;
                 $(this).val('');
                 var id_cus = ui.item.id;
-                $('#myTable > tbody:last-child').append('<tr><td><i class="fa fa-times del aria-hidden="true" style="cursor:pointer;color:red"><input id="id_cus" type="hidden" value='+ui.item.id+' ></i></td><td>'+ui.item.value+'</td><td>'+ui.item.dob+'</td><td>'+ui.item.gender+'</td><td>'+ui.item.phone+'</td></tr>');
-
-                
-                return false; 
-
+                // $.ajax({
+                //      url: '',
+                //      type: 'get',
+                //      dataType: 'html',
+                //      data: {id_cus: id_cus},
+                //  })
+                //  .done(function(data) {
+                //      console.log(data);
+                //  })
+                arr_id.push(id_cus);
+                $('#myTable > tbody:last-child').append('<tr data-id ="'+ui.item.id+'"><td><i class="fa fa-times del aria-hidden="true" style="cursor:pointer;color:red"><input id="id_cus" class="id_cus" type="hidden" value='+ui.item.id+' ></i></td><td>'+ui.item.value+'</td><td>'+ui.item.dob+'</td><td>'+ui.item.gender+'</td><td>'+ui.item.phone+'</td></tr>');
+               
+                return false;
 
             },
         })
         .autocomplete( "instance" )._renderItem = function( ul, item ) {
+                if(arr_id.length > 0){
+                var flag = false;
+                arr_id.forEach(function(value){
+                    if(item.id == value){
+                        flag = true;
+                    } 
+                });
+                if(flag){
+                    return $("");
+                }
+            }
           return $( "<li>" )
-            .append("<li><span class='suggest-name'>" + item.value + "</span><span class='suggest-description'>" + item.phone + "</span></li>")
+            .append("<li><img src ='{{ URL::to('images/p2.png') }}' style ='float:left; width:34px; border:1px solid #0000'><span class='suggest-name'>" +"&nbsp;" + item.value + "</span><span class='suggest-description'>" +"&nbsp;" + item.phone + "</span></li>")
             .appendTo( ul );
         };
         $("body").on("click",".del",function(){
             $(this).parent().parent().remove();
+            var a = $(this).parent().parent().attr("data-id");
+            console.log(parseInt(
+                arr_id.indexOf(
+                    $(this).parent().parent().
+                    find(".id_cus").val()
+                ) 
+            )) ;
+            arr_id.splice(
+                arr_id.indexOf(
+                    parseInt(
+                        $(this).parent().parent().
+                        find(".id_cus").val()
+                    )
+                ),1);
+
         })
 
     });

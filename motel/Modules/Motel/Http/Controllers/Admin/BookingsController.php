@@ -91,26 +91,33 @@ class BookingsController extends AdminBaseController
         $room = Room::where('status',1)->get();
         return view('motel::admin.bookings.create',compact('customer','room'));
     }
-    // public function getIDCusBySession(Request $request){
-    //     session()->put('id_cus',$request->id_cus);
-    // }
+    public function getIDCusBySession(Request $request){
+        $a = session()->put('id_cus',$request->id_cus);
+        //dd($a);
+
+    }
     public function getCustomer(Request $request){
-        $id_cus = session()->get("id_cus");
-        // dd($id_cus);
+        $id_cus = session()->get('id_cus');
+        //dd($id_cus);
         $arr = [];
-        $arr = $id_cus;
+        //array_push($arr, $id_cus);
+        //return response()->json
+        //unset($arr[0]);
+        //dd($arr);
+        //$arr = [];
+        //$arr = $id_cus;
         $term = $request->term;
         $data = Customer::where('full_name','LIKE','%'.$term.'%')->where('booking_id',null);
 
-        // if(isset($id_cus) && !empty($id_cus)){
-        //     $data = $data->whereNotIn('id', $arr);
-        // }
+        if(isset($id_cus) && !empty($id_cus)){
+            $data = $data->whereNotIn('id', $arr);
+        }
         $data = $data->take(10)->get();
         $result = array();
         foreach ($data as $key => $v){
             $result[] = ['id'=>$v->id,'value'=>$v->full_name,'dob'=>$v->getDOB(),'gender'=>$v->getGioiTinh(),'phone'=>$v->phone];
         }
-        //session()->forget('id_cus');
+        session()->forget('id_cus');
         return response()->json($result);
     }
 }

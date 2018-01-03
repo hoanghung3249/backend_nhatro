@@ -168,7 +168,7 @@ class EloquentMotelRepository extends EloquentBaseRepository implements MotelRep
 	}
 	public function getNews($country){
 		//return $country;
-		$news = News::selectRaw('news.*, users.email as created_by')
+		$news = News::selectRaw('news.*, users.email as created_by,users.first_name,users.last_name,users.avatar')
 		->with(array('image'=>function($query){
         	 //$query->select('sub_image','sub_image_thumb');
    		}))
@@ -192,8 +192,14 @@ class EloquentMotelRepository extends EloquentBaseRepository implements MotelRep
 		$arr = [];
 		foreach($data as $k => $v){
 			$img = Imgs::select('sub_image','sub_image_thumb')->where('new_id',$v->id)->get();
+			$user = User::select('first_name','last_name','avatar')->where('id',$v->user_id)->first();
 			$arr[$k] = $v;
 			$arr[$k]->image = $img;
+			if($user){
+				$arr[$k]->first_name = $user->first_name;
+				$arr[$k]->last_name = $user->last_name;
+				$arr[$k]->avatar = $user->avatar;
+			}
 		}
 		return $arr;
 	}

@@ -106,13 +106,16 @@ $router->group(['prefix' =>'/motel'], function (Router $router) {
         'uses' => 'BookingsController@getCustomer',
         'middleware' => 'can:room.room.create',
     ]);
-    $router->get('ajax-remove-id', [
-        'as' => 'admin.bookings.bookings.ajaxremoveid',
-        'uses' => 'BookingsController@getIDCusBySession',
+    // $router->get('ajax-remove-id', [
+    //     'as' => 'admin.bookings.bookings.ajaxremoveid',
+    //     'uses' => 'BookingsController@getIDCusBySession',
+    //     'middleware' => 'can:room.room.create',
+    // ]);
+    $router->post('bookings/create', [
+        'as' => 'admin.bookings.bookings.store',
+        'uses' => 'BookingsController@store',
         'middleware' => 'can:room.room.create',
     ]);
-
-
 
 
 

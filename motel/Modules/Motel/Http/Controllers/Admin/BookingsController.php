@@ -16,6 +16,7 @@ use Yajra\Datatables\Datatables;
 use Modules\Motel\Http\Requests\CreateRoomRequest;
 use Auth;
 use Modules\User\Contracts\Authentication;
+use Carbon\Carbon;
 
 class BookingsController extends AdminBaseController
 {
@@ -87,19 +88,20 @@ class BookingsController extends AdminBaseController
                     ->rawColumns(['check', 'action','button','select'])->make(true);
     }
     public function create(){
+        $currentUser = $this->auth->user()->id;
         //$customer = Customer::where('booking_id',null)->get();
-        $room = Room::where('status',1)->get();
-        return view('motel::admin.bookings.create',compact('customer','room'));
+        $room = Room::where('status',1)->where('user_id',$currentUser)->get();
+        return view('motel::admin.bookings.create',compact('room'));
     }
-    public function getIDCusBySession(Request $request){
-        $a = session()->put('id_cus',$request->id_cus);
-        //dd($a);
+    // public function getIDCusBySession(Request $request){
+    //     $a = session()->put('id_cus',$request->id_cus);
+    //     //dd($a);
 
-    }
+    // }
     public function getCustomer(Request $request){
-        $id_cus = session()->get('id_cus');
+        //$id_cus = session()->get('id_cus');
         //dd($id_cus);
-        $arr = [];
+        //$arr = [];
         //array_push($arr, $id_cus);
         //return response()->json
         //unset($arr[0]);
@@ -109,15 +111,52 @@ class BookingsController extends AdminBaseController
         $term = $request->term;
         $data = Customer::where('full_name','LIKE','%'.$term.'%')->where('booking_id',null);
 
-        if(isset($id_cus) && !empty($id_cus)){
-            $data = $data->whereNotIn('id', $arr);
-        }
+        // if(isset($id_cus) && !empty($id_cus)){
+        //     $data = $data->whereNotIn('id', $arr);
+        // }
         $data = $data->take(10)->get();
         $result = array();
         foreach ($data as $key => $v){
             $result[] = ['id'=>$v->id,'value'=>$v->full_name,'dob'=>$v->getDOB(),'gender'=>$v->getGioiTinh(),'phone'=>$v->phone];
         }
-        session()->forget('id_cus');
+        //session()->forget('id_cus');
         return response()->json($result);
+    }
+    public function store(Request $request){
+        //dd($request->id_cus);
+
+        $currentUser = $this->auth->user()->id;
+        $date = Carbon::parse($request->start_date)->format('Y-m-d');
+        $data = new Bookings();
+        $data->user_id = $currentUser;
+        $data->start_date = $date;
+        $data->unit_price = $request->unit_price;
+        $data->down_payment = $request->down_payment;
+        $data->room_id = $request->room_id;
+        $data->number_of_bike = $request->number_of_bike;
+        $data->note = $request->note;
+        $data->save();
+        if($request->id_cus != null){
+            foreach($request->id_cus as $item){
+                $data->customer_id = $item;
+                $data->save();
+                break;
+            }
+            foreach($request->id_cus as $item){
+                $customer = Customer::where('id',$item)->first();
+                if($customer){
+                    $customer->booking_id = $data->id;
+                    $customer->save();
+                }
+            }
+        }
+        
+        $room = Room::find($request->room_id);
+        if($room){
+            $room->status = 0;
+            $room->save();
+        }
+        return redirect()->route('admin.bookings.bookings.index')
+            ->withSuccess(trans('Tạo mới thành công')); 
     }
 }

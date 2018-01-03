@@ -31,13 +31,13 @@ class Bookings extends Model
    	}
 
    	public function getTienCoc(){
-    	return number_format($this->deposit,0,'.','.')." VNĐ";
+    	return number_format($this->down_payment,0,'.','.')." VNĐ";
     }
 
 
-    public function getCustomer(){
-    	return $this->hasMany(Customer::class, 'customer_id');
-    }
+    // public function getCustomer(){
+    // 	return $this->hasMany(Customer::class, 'customer_id');
+    // }
    	// public function getTenKhachHang(){
     // 	$name_client = $this->getCustomer()->first();
     // 	if($name_client != null){

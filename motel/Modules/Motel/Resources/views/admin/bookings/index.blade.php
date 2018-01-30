@@ -33,7 +33,7 @@
                 <table id="tablevehilce" class="table table-bordered table-hover " cellspacing="0" width="100%">
                     <thead>
                         <tr>
-                            <th>Check box</th>
+{{--                             <th>Check box</th> --}}
                             <th>Tên phòng</th>
                             <th>Ngày thuê phòng</th>
                             <th>Ngày trả phòng</th>
@@ -50,7 +50,7 @@
 
 
                 
-                <button type="button" class="btn btn-danger btn-flat" data-toggle="modal" data-target="#myModal"><i class="fa fa-trash-o" aria-hidden="true"> Xoá các mục đã chọn</i></button>
+                {{-- <button type="button" class="btn btn-danger btn-flat" data-toggle="modal" data-target="#myModal"><i class="fa fa-trash-o" aria-hidden="true"> Xóa các mục đã chọn</i></button> --}}
                 {{-- <a href="" class="btn btn-info btn-flat" >Export Vehicle</a> --}}
 
 
@@ -135,7 +135,7 @@ jQuery(document).ready(function($) {
             selector: 'td:first-child'
         },
         columns:[
-            {data:'check',searchable:false},
+            // {data:'check',searchable:false},
             {data:'tenphong',searchable:true},
             {data:'ngaythue',searchable:true},
             {data:'ngaytra',searchable:true},

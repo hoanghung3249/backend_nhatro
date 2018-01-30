@@ -106,6 +106,11 @@ $router->group(['prefix' =>'/motel'], function (Router $router) {
         'uses' => 'BookingsController@getCustomer',
         'middleware' => 'can:room.room.create',
     ]);
+    $router->get('autocomplete-customer-for-create', [
+        'as' => 'admin.bookings.bookings.autocompletecustomerforcreate',
+        'uses' => 'BookingsController@getCustomerForCreate',
+        'middleware' => 'can:room.room.create',
+    ]);
     // $router->get('ajax-remove-id', [
     //     'as' => 'admin.bookings.bookings.ajaxremoveid',
     //     'uses' => 'BookingsController@getIDCusBySession',
@@ -116,9 +121,21 @@ $router->group(['prefix' =>'/motel'], function (Router $router) {
         'uses' => 'BookingsController@store',
         'middleware' => 'can:room.room.create',
     ]);
-
-
-
+    $router->get('bookings/{id}/edit', [
+        'as' => 'admin.bookings.bookings.edit',
+        'uses' => 'BookingsController@edit',
+        'middleware' => 'can:room.room.create',
+    ]);
+    $router->put('bookings/{id}/edit', [
+        'as' => 'admin.bookings.bookings.update',
+        'uses' => 'BookingsController@update',
+        'middleware' => 'can:room.room.create',
+    ]);
+    $router->delete('bookings-delete/{id}', [
+        'as' => 'admin.bookings.bookings.destroy',
+        'uses' => 'BookingsController@destroy',
+        'middleware' => 'can:room.room.destroy',
+    ]);
 
 
 

@@ -127,24 +127,26 @@
 								</div>
 							</div>
 							<div class="col-sm-6">
-								<div class="col-sm-6">
-									<div class="form-group{{ $errors->has('start_date') ? ' has-error' : '' }}">
-                                        {!! Form::label('start_date', 'Ngày thuê') !!}
-                                        <div class='input-group date' id='datetimepicker2'>
-                                        <input type='text' class="form-control" value="{{ old('start_date') }}" name="start_date" />
-                                        <span class="input-group-addon">
-                                            <span class="glyphicon glyphicon-calendar"></span>
-                                        </span>
-                                        
-                                    </div>
-                                    {!! $errors->first('start_date', '<span class="help-block">:message</span>') !!}
-                                	</div>
-                                </div>
-                                <div class="col-sm-6">
-									<div class="form-group{{ $errors->has('number_of_bike') ? ' has-error' : '' }}">
-										{!! Form::label('number_of_bike', trans('Số lượng xe')) !!}
-										{!! Form::number('number_of_bike', old('number_of_bike'), ['class' => 'form-control', 'placeholder' => trans('Ví dụ: 2')]) !!}
-										{!! $errors->first('number_of_bike', '<span class="help-block">:message</span>') !!}
+								<div class="row">
+									<div class="col-sm-6">
+										<div class="form-group{{ $errors->has('start_date') ? ' has-error' : '' }}">
+	                                        {!! Form::label('start_date', 'Ngày thuê') !!}
+	                                        <div class='input-group date' id='datetimepicker2'>
+	                                        <input type='text' class="form-control" value="{{ old('start_date') }}" name="start_date" />
+	                                        <span class="input-group-addon">
+	                                            <span class="glyphicon glyphicon-calendar"></span>
+	                                        </span>
+	                                        
+	                                    </div>
+	                                    {!! $errors->first('start_date', '<span class="help-block">:message</span>') !!}
+	                                	</div>
+	                                </div>
+	                                <div class="col-sm-6">
+										<div class="form-group{{ $errors->has('number_of_bike') ? ' has-error' : '' }}">
+											{!! Form::label('number_of_bike', trans('Số lượng xe')) !!}
+											{!! Form::number('number_of_bike', old('number_of_bike'), ['class' => 'form-control', 'placeholder' => trans('Ví dụ: 2')]) !!}
+											{!! $errors->first('number_of_bike', '<span class="help-block">:message</span>') !!}
+										</div>
 									</div>
 								</div>
 							</div>
@@ -186,8 +188,8 @@
 					</div>
 				</div>
 				<div class="box-footer">
-					<button type="submit" class="btn btn-primary btn-flat">{{ trans('user::button.create') }}</button>
-					<a class="btn btn-danger pull-right btn-flat" href="{{ URL::route('admin.room.room.index')}}"><i class="fa fa-times"></i> {{ trans('user::button.cancel') }}</a>
+					<button type="submit" class="btn btn-primary btn-flat">{{ trans('Tạo mới') }}</button>
+					<a class="btn btn-danger pull-right btn-flat" href="{{ URL::route('admin.room.room.index')}}"><i class="fa fa-times"></i> {{ trans('Hủy bỏ') }}</a>
 				</div>
 			</div>
 		</div>
@@ -229,27 +231,13 @@
 
 
 		$( "#full_name" ).autocomplete({
-			source: "{{ route('admin.bookings.bookings.autocompletecustomer') }}",
+			source: "{{ route('admin.bookings.bookings.autocompletecustomerforcreate') }}",
 			minlenght:1,
 			autoFocus: true,
 			select:function(e,ui){
-				//console.log(ui);
-				// window.location.href = "dat-hang/"+ui.item.id;
 				$(this).val('');
 				var id_cus = ui.item.id;
-				// $.ajax({
-				//      url: '',
-				//      type: 'get',
-				//      dataType: 'html',
-				//      data: {id_cus: id_cus},
-				//  })
-				//  .done(function(data) {
-				//      console.log(data);
-				//  })
 				arr_id.push(id_cus);
-				// $('.scrollToTop').click(function(){
-					
-				// });
 				$('#myTable > tbody:last-child').append('<tr data-id ="'+ui.item.id+'"><td><i class="fa fa-times del aria-hidden="true" style="cursor:pointer;color:red"><input id="id_cus" name="id_cus[]" class="id_cus" type="hidden" value='+ui.item.id+' ></i></td><td>'+ui.item.value+'</td><td>'+ui.item.dob+'</td><td>'+ui.item.gender+'</td><td>'+ui.item.phone+'</td></tr>');
 			    $('html, body').animate({ scrollTop: $(document).height() }, 1200);
 				return false;
@@ -275,12 +263,6 @@
 		$("body").on("click",".del",function(){
 			$(this).parent().parent().remove();
 			var a = $(this).parent().parent().attr("data-id");
-			// console.log(parseInt(
-			// 	arr_id.indexOf(
-			// 		$(this).parent().parent().
-			// 		find(".id_cus").val()
-			// 	) 
-			// )) ;
 			arr_id.splice(
 				arr_id.indexOf(
 					parseInt(

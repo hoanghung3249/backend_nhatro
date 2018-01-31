@@ -89,7 +89,8 @@ class BookingsController extends AdminBaseController
     }
     public function create(){
         $currentUser = $this->auth->user()->id;
-        //$customer = Customer::where('booking_id',null)->get();
+        // $customer = Customer::where('user_id',$currentUser)->get();
+        // dd($customer);
         $room = Room::where('status',1)->where('user_id',$currentUser)->get();
         return view('motel::admin.bookings.create',compact('room'));
     }
@@ -99,8 +100,9 @@ class BookingsController extends AdminBaseController
 
     // }
     public function getCustomer(Request $request){
+        $currentUser = $this->auth->user()->id;
         $term = $request->term;
-        $data = Customer::where('full_name','LIKE','%'.$term.'%');
+        $data = Customer::where('full_name','LIKE','%'.$term.'%')->where('user_id',$currentUser);
         // ->where('booking_id',null)
         $data = $data->take(10)->get();
         $result = array();
@@ -111,7 +113,8 @@ class BookingsController extends AdminBaseController
     }
     public function getCustomerForCreate(Request $request){
         $term = $request->term;
-        $data = Customer::where('full_name','LIKE','%'.$term.'%')->where('booking_id',null);
+        $currentUser = $this->auth->user()->id;
+        $data = Customer::where('full_name','LIKE','%'.$term.'%')->where('booking_id',null)->where('user_id',$currentUser);
         $data = $data->take(10)->get();
         $result = array();
         foreach ($data as $key => $v){

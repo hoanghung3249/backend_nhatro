@@ -106,6 +106,11 @@ class RoomController extends AdminBaseController
 	public function delete(Request $request, $id){
 		$room = Room::find($id);
 		if($room){
+			$room_check = $room->checkPhongThue();
+			if($room_check == false){
+				return redirect()->back()
+        			->withWarning(trans('Bạn phải xóa tất cả thủ tục đặt phòng này trước khi thực hiện thao tác xóa phòng'));
+			}
 			$room->delete();
 		}
 
@@ -135,7 +140,12 @@ class RoomController extends AdminBaseController
             $request->session()->flash('danger','Chọn các mục trước khi xoá');
             return 2;
         }else{
-            $user = Room::where('id',$id)->delete(); 
+
+            $room = Room::find($id);
+            if($room->checkPhongThue() == false){
+        		return 2;
+        	}
+        	$room->delete();
             $request->session()->flash('success','Xoá thành công');
             return 1;
         } 

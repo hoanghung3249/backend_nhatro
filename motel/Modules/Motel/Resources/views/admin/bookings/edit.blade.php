@@ -124,7 +124,8 @@
                                       <option value="{{ $item->id }}" @if($item->id == $booking->room_id || $item->id == old('room_id')) selected="" @endif>{{ $item->name }}</option>
                                     @endforeach
                                     </select> --}}
-                                    {!! Form::text('room_id', old('room_id'), ['disabled','class' => 'form-control']) !!}
+                                    <input type="text" disabled="" class="form-control" name="room_id" value="{{ $booking->getRoom->name }}">
+                                   {{--  {!! Form::text('room_id', old('room_id'), ['disabled','class' => 'form-control']) !!} --}}
                                 </div>
                             </div>
                             <div class="col-sm-6">

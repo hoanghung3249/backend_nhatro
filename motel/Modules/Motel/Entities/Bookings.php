@@ -19,6 +19,11 @@ class Bookings extends Model
    // protected $fillable = [];
     protected $guard = [];
 
+
+    public function getRoom(){
+      return $this->belongsTo(Room::class,'room_id');
+    }
+
    	public function getGiaPhong(){
    		return number_format($this->unit_price,0,'.','.')." VNĐ";
    	}

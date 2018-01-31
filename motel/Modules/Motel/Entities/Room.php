@@ -6,6 +6,7 @@ namespace Modules\Motel\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Modules\User\Entities\Sentinel\User;
 use Modules\Motel\Entities\Imgs;
+use Modules\Motel\Entities\Bookings;
 
 class Room extends Model
 {
@@ -15,6 +16,11 @@ class Room extends Model
     //public $translatedAttributes = [];
    //protected $fillable = ['name'];
    protected $guarded = [];
+
+
+    public function getBooking(){
+      return $this->hasMany(Bookings::class, 'room_id','id');
+    }
 
    	public function getArea(){
    		return $this->erea." m²";
@@ -28,5 +34,20 @@ class Room extends Model
    	public function getTienNuoc(){
    		return number_format($this->payment_of_water,0,'.','.')."/m³";
    	}
+    public function checkPhongThue(){
+    //   $data = Bookings::where('room_id',$room_id)->first();
+    //   if($data){
+    //     return false;
+    //   }return true;
+
+      $room = self::getBooking()->count();
+      //dd($room);
+      if($room > 0){
+        return false;
+      }
+      return true;
+
+
+    }
 
 }

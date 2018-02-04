@@ -218,6 +218,20 @@
     jQuery(document).ready(function() {
 
         var arr_id = [];
+        $("#full_name").change(function(event) {
+            
+            $.ajax({
+                url: '{{ route('admin.bookings.bookings.getallcusajax') }}',
+                type: 'get',
+                dataType: 'html',
+
+            })
+            .done(function(data) {
+                console.log(data);
+            })
+        });
+
+        
 
         $(".id_cus").each(function(key , value){
             arr_id.push(parseInt( $(this).val()) );

@@ -122,6 +122,15 @@ class BookingsController extends AdminBaseController
         }
         return response()->json($result);        
     }
+    public function getAllCustomerAjax(){
+        $currentUser = $this->auth->user()->id;
+        $data = Customer::where('booking_id','<>',null)->where('user_id',$currentUser)->get();
+        $data_new = collect($data)->map(function($item) {
+            return $item->id;
+        })->toArray();
+        return $data_new;
+        
+    }
     public function store(Request $request){
         //dd($request->id_cus);
 

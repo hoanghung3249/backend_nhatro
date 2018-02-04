@@ -40,10 +40,12 @@
     <header class="main-header">
         <a href="{{ URL::route('dashboard.index') }}" class="logo">
             <span class="logo-mini">
+
                 @setting('core::site-name-mini')
             </span>
             <span class="logo-lg">
-                @setting('core::site-name')
+                <img src="https://proj-fxchange.s3.ap-southeast-1.amazonaws.com/assets/media/27744258-1677388708989235-678432541-o_1.png" width="110px;">
+                {{-- @setting('core::site-name') --}}
             </span>
         </a>
         @include('partials.top-nav')

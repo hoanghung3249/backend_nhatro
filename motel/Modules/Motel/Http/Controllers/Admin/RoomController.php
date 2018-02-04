@@ -79,7 +79,8 @@ class RoomController extends AdminBaseController
     	$data = $request->all();
     	$data['user_id'] = $currentUser;
     	unset($data['_token']);
-    	Room::create($data); 
+    	Room::create($data);
+    	//dd(1);
     	return redirect()->route('admin.room.room.index')
             ->withSuccess(trans('Tạo mới thành công'));
     }

@@ -297,7 +297,13 @@ class ApiMotelController extends ApiController
             ]);
         }
         else{
-            return $this->respondNotFound('Not Found');
+            $arr = [];
+            return $this->respond([
+                'status' => 'success',
+                'status_code' => 200,
+                'message' => "Get list successful!",
+                'data' => $arr,
+            ]);
         }
     }
     /**

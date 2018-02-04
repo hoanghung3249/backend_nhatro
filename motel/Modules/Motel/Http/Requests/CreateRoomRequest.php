@@ -12,8 +12,8 @@ class CreateRoomRequest extends BaseFormRequest
             'name' => 'required',
             'erea' => 'required|numeric',
             'unit_price' => 'required|numeric',
-            'payment_on_electricity' => 'required|numeric',
-            'payment_of_water' => 'required|numeric',
+            // 'payment_on_electricity' => 'required|numeric',
+            // 'payment_of_water' => 'required|numeric',
         ];
     }
 

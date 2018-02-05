@@ -102,12 +102,13 @@ class BookingsController extends AdminBaseController
     public function getCustomer(Request $request){
         $currentUser = $this->auth->user()->id;
         $term = $request->term;
-        $data = Customer::where('full_name','LIKE','%'.$term.'%')->where('user_id',$currentUser);
+        $data = Customer::with('getPhongTro')->where('full_name','LIKE','%'.$term.'%')->where('user_id',$currentUser);
         // ->where('booking_id',null)
         $data = $data->take(10)->get();
+        //return response()->json($data);
         $result = array();
         foreach ($data as $key => $v){
-            $result[] = ['id'=>$v->id,'value'=>$v->full_name,'dob'=>$v->getDOB(),'gender'=>$v->getGioiTinh(),'phone'=>$v->phone];
+            $result[] = ['id'=>$v->id,'value'=>$v->full_name,'dob'=>$v->getDOB(),'gender'=>$v->getGioiTinh(),'phone'=>$v->phone,'booking_id'=>$v->booking_id];
         }
         return response()->json($result);
     }
@@ -118,19 +119,22 @@ class BookingsController extends AdminBaseController
         $data = $data->take(10)->get();
         $result = array();
         foreach ($data as $key => $v){
-            $result[] = ['id'=>$v->id,'value'=>$v->full_name,'dob'=>$v->getDOB(),'gender'=>$v->getGioiTinh(),'phone'=>$v->phone];
+            $result[] = ['id'=>$v->id,'value'=>$v->full_name,'dob'=>$v->getDOB(),'gender'=>$v->getGioiTinh(),'phone'=>$v->phone,'booking_id'=>$v->booking_id];
         }
         return response()->json($result);        
     }
-    public function getAllCustomerAjax(){
-        $currentUser = $this->auth->user()->id;
-        $data = Customer::where('booking_id','<>',null)->where('user_id',$currentUser)->get();
-        $data_new = collect($data)->map(function($item) {
-            return $item->id;
-        })->toArray();
-        return $data_new;
+    // public function getAllCustomerAjax(Request $request){
+    //     $currentUser = $this->auth->user()->id;
+    //     $arr_id_edit = [];
+    //     $arr_id_edit = $request->get('arr');
+    //     //return $arr_id_edit;
+    //     $data = Customer::where('booking_id','<>',null)->whereNotIn('id',$arr_id_edit)->where('user_id',$currentUser)->get();
+    //     $data_new = collect($data)->map(function($item) {
+    //         return $item->id;
+    //     })->toArray();
+    //     return $data_new;
         
-    }
+    // }
     public function store(Request $request){
         //dd($request->id_cus);
 

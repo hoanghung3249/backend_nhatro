@@ -163,6 +163,7 @@
                         </div>
                         <hr />
                         <h1>Thành viên thuê phòng</h1>
+                        <input id="room_id" name="room_id[]" class="room_id" type="hidden" value='{{ $booking->id }}' ></i></td>                   
                         <div class="row">
                             <div class="col-md-12">
                                 <table class="table table-bordered table-hover data-table" id="myTable" cellspacing="0" width="100%">
@@ -178,7 +179,7 @@
                                     <tbody>
                                         @foreach($customer_of_room as $item)
                                         <tr data-id ="{{ $item->id }}">
-                                            <td><i class="fa fa-times del aria-hidden="true" style="cursor:pointer;color:red"><input id="id_cus" name="id_cus[]" class="id_cus" type="hidden" value='{{ $item->id }}' ></i></td>
+                                            <td><i class="fa fa-times del aria-hidden="true" style="cursor:pointer;color:red"><input id="id_cus" name="id_cus[]" class="id_cus" type="hidden" value='{{ $item->id }}' >
                                             <td>{{ $item->getHoTen() }}</td>
                                             <td>{{ $item->getDOB() }}</td>
                                             <td>{{ $item->getGioiTinh() }}</td>
@@ -218,18 +219,25 @@
     jQuery(document).ready(function() {
 
         var arr_id = [];
-        $("#full_name").change(function(event) {
-            
-            $.ajax({
-                url: '{{ route('admin.bookings.bookings.getallcusajax') }}',
-                type: 'get',
-                dataType: 'html',
+        // $("#full_name").click(function(event) {
+        //     var arr = [];
+        //     $(".id_cus").each(function(key , value){
+        //         arr.push(parseInt( $(this).val()) );
+        //     });
+        //     //alert(arr);
+        //     $.ajax({
+        //         url: '',
+        //         type: 'get',
+        //         dataType: 'html',
+        //         data:{arr,arr},
 
-            })
-            .done(function(data) {
-                console.log(data);
-            })
-        });
+        //     })
+        //     .done(function(data) {
+        //         //arr_id.push(parseInt(data) );
+        //         var newArray = arr_id.concat(data);
+        //         console.log(newArray);
+        //     })
+        // });
 
         
 
@@ -268,8 +276,12 @@
             },
         })
         .autocomplete( "instance" )._renderItem = function( ul, item ) {
-            //console.log(item);
-                if(arr_id.length > 0){
+            //console.log(item.booking_id != null && item.booking_id != parseInt($("#room_id").val())  , item);
+            if(item.booking_id != null && item.booking_id != parseInt($("#room_id").val()) ){
+                return $("");
+            }
+
+            if(arr_id.length > 0){
                 var flag = false;
                 arr_id.forEach(function(value){
                     if(item.id == value){

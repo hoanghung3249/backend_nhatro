@@ -17,6 +17,9 @@ use Modules\Motel\Http\Requests\CreateRoomRequest;
 use Auth;
 use Modules\User\Contracts\Authentication;
 use Carbon\Carbon;
+use Modules\Motel\Entities\Bills;
+use Modules\Motel\Entities\BillsDetail;
+use Modules\Motel\Entities\Config;
 
 class BookingsController extends AdminBaseController
 {
@@ -82,7 +85,8 @@ class BookingsController extends AdminBaseController
                 	// 	})
                     ->addColumn('check', '<input class = "check" type="checkbox" name="selected_room[]" value="{{ $id }}">')
                     ->addColumn('button', '<div class ="button_action">
-		                    	<a title=Edit Room" class="btn btn-default btn-flat" href="{{ route("admin.bookings.bookings.edit",$id) }}" style="margin-right:3px"><i class="fa fa-pencil"></i></a> 
+		                    	<a title=Edit Room" class="btn btn-default btn-flat" href="{{ route("admin.bookings.bookings.edit",$id) }}" style="margin-right:3px"><i class="fa fa-pencil"></i></a>
+                                <a title="Calculator" class="btn btn-default btn-flat" href="{{ route("admin.bills.bills.indexbills",$id) }}" style="margin-right:3px"><i class="fa fa-calculator"></i></a> 
 		                    	<button title="Delete Room" class="btn btn-danger btn-sm btn-flat" data-toggle="modal" data-target="#modal-delete-confirmation" data-action-target="{{route("admin.bookings.bookings.destroy",$id)}}"><i class="fa fa-trash"></i></button> </div>
 		                    	')
                     ->rawColumns(['check', 'action','button','select'])->make(true);
@@ -235,5 +239,74 @@ class BookingsController extends AdminBaseController
 
         return redirect()->route('admin.bookings.bookings.index')
             ->withSuccess(trans('Xoá thành công'));        
+    }
+
+
+
+
+    public function indexbills($id){
+        session()->put('id',$id);
+        return view('motel::admin.bookings.bill');
+    }
+    public function indextablebills(){
+        $booking_id = session()->get("id");
+        $currentUser = $this->auth->user()->id;
+            $items = Bills::where('user_id',$currentUser)->where('booking_id',$booking_id)->get();
+            $collection = collect($items);
+            //session()->forget('id');
+            return $this->datatables->of($collection)
+                    ->editColumn('thang', function( $room) {
+                                return $room->getThang();
+                            })
+                    ->editColumn('total', function( $room) {
+                                return $room->getTotal();
+                            })
+                    ->editColumn('datra', function( $room) {
+                                return $room->getDaTra();
+                            })
+                    ->editColumn('conlai', function( $room) {
+                                return $room->getConLai();
+                            })
+                    ->editColumn('no', function( $room) {
+                                return $room->getNo();
+                            })
+                    ->editColumn('ngaytra', function( $room) {
+                                return $room->getNgayTra();
+                            })
+                    ->addColumn('check', '<input class = "check" type="checkbox" name="selected_room[]" value="{{ $id }}">')
+                    ->addColumn('button', '<div class ="button_action">
+                                <a title=Edit Room" class="btn btn-default btn-flat" href="{{ route("admin.bills.bills.indexbillsdetail",$id) }}" style="margin-right:3px"><i class="fa fa-pencil"></i></a>
+                                <button title="Delete Room" class="btn btn-danger btn-sm btn-flat" data-toggle="modal" data-target="#modal-delete-confirmation" data-action-target="{{route("admin.bookings.bookings.destroy",$id)}}"><i class="fa fa-trash"></i></button> </div>
+                                ')
+                    ->rawColumns(['check', 'action','button','select'])->make(true);        
+    }
+    public function indexbillsdetail($id){ 
+        $currentUser = $this->auth->user()->id;
+        $last_month = Carbon::now()->subMonth()->format('Y-m');
+        //dd($last_month);
+        $check_index = BillsDetail::where('user_id',$currentUser)
+                                       ->where('bills_id',$id)
+                                       ->whereRaw("DATE_FORMAT(created_at,'%Y-%m')='{$last_month}'")
+                                       ->first();
+                                       //dd($electric_index);
+        if($check_index){
+            $electricity_index = $check_index->electricity_index;
+            $water_index = $check_index->water_index;
+
+        }else{
+            $check_index = 0;
+            $water_index = 0 ;
+        }
+        //dd((int)$electric_index);
+
+        $config = Config::where('user_id',$currentUser)->first();
+        $bills = Bills::with('getBooking')->where('user_id',$currentUser)->where('id',$id)->first();
+        //$bills_detail = BillsDetail::with('getBills')->with('getBooking')->with('getRoom')->where('user_id',$currentUser)->where('bills_id',$id)->first();
+        $price_room = number_format($bills->getBooking->getRoom->unit_price,0,'.','.');
+
+        $room_price = $bills->getBooking->getRoom->unit_price;
+        $total = $config->payment_on_electricity + $config->payment_of_water + $config->parking + $config->trash + $config->internet + $room_price;
+        return view('motel::admin.bookings.bill_detail',compact('config','price_room','bills','electricity_index','water_index', 'total'));
+
     }
 }

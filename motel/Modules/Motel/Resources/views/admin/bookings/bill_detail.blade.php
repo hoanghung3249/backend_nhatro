@@ -2,11 +2,11 @@
 
 @section('content-header')
 <h1>
-    {{ trans('Phòng đang được thuê') }}
+    {{ trans('Hóa đơn tháng ...') }}
 </h1>
 <ol class="breadcrumb">
     <li><a href="{{ URL::route('dashboard.index') }}"><i class="fa fa-dashboard"></i> {{ trans('core::core.breadcrumb.home') }}</a></li>
-    <li class="active">{{ trans('Phòng trọ') }}</li>
+    <li class="active">{{ trans('Cấu hình') }}</li>
 </ol>
 @stop
 
@@ -18,39 +18,91 @@
 </style>
 <div class="row">
     <div class="col-xs-12">
-        <div class="row">
+{{--         <div class="row">
             <div class="btn-group pull-right" style="margin: 0 15px 15px 0;">
                 <a href="{{ route('admin.bookings.bookings.create') }}" class="btn btn-primary btn-flat" style="padding: 4px 10px;">
                     <i class="fa fa-pencil"></i> {{ trans('Tạo thủ tục thuê phòng') }}
                 </a>
             </div>
-        </div>
+        </div> --}}
         <div class="box box-primary">
             <div class="box-header">
             </div>
             <!-- /.box-header -->
             <div class="box-body table-responsive">
-                <table id="tablevehilce" class="table table-bordered table-hover " cellspacing="0" width="100%">
+            <form action="{{ route('admin.config.config.post') }}" method="POST" class="form-inline" style="padding-top: 15px">
+            {{ csrf_field() }}
+                <table id="tablevehilce" class="table table-bordered table-hover data-table" cellspacing="0" width="100%">
                     <thead>
                         <tr>
-{{--                             <th>Check box</th> --}}
-                            <th>Tên phòng</th>
-                            <th>Ngày thuê phòng</th>
-                            <th>Ngày trả phòng</th>
-                            <th>Giá Phòng (Đơn vị)</th>
-{{--                             <th>Tiền điện (Đơn vị)</th>
-                            <th>Tiền nước (Đơn vị)</th> --}}
-                            <th>Tiền cọc (Đơn vị)</th>
-                            {{-- <th>Người thuê</th> --}}
-                            {{-- <th>Trạng thái</th> --}}
-                            <th>Chỉnh sửa / Tính tiền / Xoá</th>           
+                            <th width="10%">Nội dung thanh toán</th>
+                            <th width="10%">Đơn giá</th>
+                            <th width="10%">Chỉ số cũ</th>
+                            <th width="10%">Chỉ số mới</th>  
+                            <th width="10%">Số lượng</th>  
+                            <th width="20%">Thành tiền</th>          
                         </tr>
                     </thead>
+                    <tbody>
+                        <tr>
+                            <td>Tiền điện</td>
+                            <td align="right">{{ number_format($config->payment_on_electricity,0,'.','.') }}</td>
+                            <td><input class="form-control" type="number" name="electricity_index" value="{{ (int)$electricity_index }}"></td>
+                            <td><input class="form-control" type="number" name="electricity_index_2"></td>
+                            <td></td>
+                            <td align="right">{{ number_format($config->payment_on_electricity,0,'.','.') }}</td>
+                        </tr>
+                        <tr>
+                            <td>Tiền nước</td>
+                            <td align="right">{{ number_format($config->payment_of_water,0,'.','.') }}</td>
+                            <td><input class="form-control" type="number" name="electricity_index" value="{{ (int)$water_index }}"></td>
+                            <td><input class="form-control" type="number" name="electricity_index"></td>
+                            <td></td>
+                            <td align="right">{{ number_format($config->payment_of_water,0,'.','.') }}</td>
+                        </tr>
+                        <tr>
+                            <td>Tiền đổ rác</td>
+                            <td align="right">{{ number_format($config->trash,0,'.','.') }}</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td align="right">{{ number_format($config->trash,0,'.','.') }}</td>
+                        </tr>
+                        <tr>
+                            <td>Tiền Internet</td>
+                            <td align="right">{{ number_format($config->internet,0,'.','.') }}</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td align="right">{{ number_format($config->internet,0,'.','.') }}</td>
+                        </tr>
+
+                        <tr>
+                            <td>Tiền giữ xe</td>
+                            <td align="right">{{ number_format($config->parking,0,'.','.') }}</td>
+                            <td></td>
+                            <td></td>
+                            <td><input class="form-control" type="number" name="electricity_index" value="{{ $bills->getBooking->number_of_bike }}"></td>
+                            <td align="right">{{ number_format($config->parking,0,'.','.') }}</td>
+                        </tr>
+                        <tr>
+                            <td>Tiền phòng</td>
+                            <td align="right">{{ $price_room }}</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td align="right">{{ $price_room }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" style="background-color: #CCC; font-weight: bold;" align="right">Tổng cộng</td>
+                            <td align="right" style="font-weight: bold;">{{ number_format($total,0,'.','.') }}</td>
+                        </tr>
+                    </tbody>
                 </table>
-
-
+                <button class="btn btn-primary btn-flat" type="submit" style="padding: 5px 12px;"><i class="fa fa-floppy-o"></i> Lưu lại</button>
+                </form>
+            
                 
-                {{-- <button type="button" class="btn btn-danger btn-flat" data-toggle="modal" data-target="#myModal"><i class="fa fa-trash-o" aria-hidden="true"> Xóa các mục đã chọn</i></button> --}}
                 {{-- <a href="" class="btn btn-info btn-flat" >Export Vehicle</a> --}}
 
 
@@ -89,7 +141,7 @@
 
 @push('js-stack')
 <?php $locale = App::getLocale(); ?>
-<script type="text/javascript">
+{{-- <script type="text/javascript">
 jQuery(document).ready(function($) {
     //alert(123);
     $("#tablevehilce").on('click',".check-stt",function(){
@@ -117,14 +169,14 @@ jQuery(document).ready(function($) {
         
     })
 });
-</script>
+</script> --}}
 
-<script type="text/javascript">
+{{-- <script type="text/javascript">
     $(document).ready(function(){
     $('#tablevehilce').DataTable({
         processing:false,
         serverSide:true,
-        ajax:"{{ route('admin.bookings.bookings.indextable') }}",
+        ajax:"{{ route('admin.config.config.indextable') }}",
         columnDefs: [ {
             orderable: false,
             className: 'select-checkbox',
@@ -136,15 +188,15 @@ jQuery(document).ready(function($) {
         },
         columns:[
             // {data:'check',searchable:false},
-            {data:'tenphong',searchable:true},
-            {data:'ngaythue',searchable:true},
-            {data:'ngaytra',searchable:true},
-            {data:'giaphong',searchable:true},
+            {data:'phi',searchable:true},
+            // {data:'ngaythue',searchable:true},
+            // {data:'ngaytra',searchable:true},
+            // {data:'giaphong',searchable:true},
             // {data:'tiendien',searchable:true},
             // {data:'tiennuoc',searchable:true},
-            {data:'tiencoc',searchable:true},
-            // {data:'customer',searchable:false},
-            {data:'button',searchable:false},
+            // {data:'tiencoc',searchable:true},
+            // // {data:'customer',searchable:false},
+            // {data:'button',searchable:false},
 
         ],
     });
@@ -178,9 +230,7 @@ jQuery(document).ready(function($) {
 
 
 </script>
-
-
-
+ --}}
 
 
 
@@ -197,7 +247,7 @@ jQuery(document).ready(function($) {
             "paginate": true,
             "lengthChange": true,
             "filter": true,
-            "sort": true,
+            "sort": false,
             "info": true,
             "autoWidth": true,
             "order": [[ 0, "desc" ]],
@@ -206,5 +256,6 @@ jQuery(document).ready(function($) {
             }
         });
     });
+
 </script>
 @endpush

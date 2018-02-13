@@ -29,6 +29,23 @@ class Config extends Model
    	// public function getTienNuoc(){
    	// 	return number_format($this->payment_of_water,0,'.','.')."/m³";
    	// }
+
+    public function getTienDien(){
+      return number_format($this->payment_on_electricity,0,'.','.')."/KwH";
+    }
+    public function getTienNuoc(){
+      return number_format($this->payment_of_water,0,'.','.')."/m³";
+    }
+    public function getTienRac(){
+      return number_format($this->trash,0,'.','.')." VNĐ";
+    }
+    public function getTienInternet(){
+      return number_format($this->internet,0,'.','.')." VNĐ";
+    }
+    public function getTienDauXe(){
+      return number_format($this->parking,0,'.','.')." VNĐ";
+    }
+   
    public function getUpdatedAt(){
       if($this->updated_at == "-0001-11-30 00:00:00" || $this->updated_at == null){
         return null;

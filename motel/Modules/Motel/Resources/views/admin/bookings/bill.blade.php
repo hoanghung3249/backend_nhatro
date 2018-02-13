@@ -2,7 +2,7 @@
 
 @section('content-header')
 <h1>
-    {{ trans('Phòng đang được thuê') }}
+    {{ trans('Hóa đơn tiền phòng theo tháng') }}
 </h1>
 <ol class="breadcrumb">
     <li><a href="{{ URL::route('dashboard.index') }}"><i class="fa fa-dashboard"></i> {{ trans('core::core.breadcrumb.home') }}</a></li>
@@ -18,13 +18,13 @@
 </style>
 <div class="row">
     <div class="col-xs-12">
-        <div class="row">
+{{--         <div class="row">
             <div class="btn-group pull-right" style="margin: 0 15px 15px 0;">
                 <a href="{{ route('admin.bookings.bookings.create') }}" class="btn btn-primary btn-flat" style="padding: 4px 10px;">
                     <i class="fa fa-pencil"></i> {{ trans('Tạo thủ tục thuê phòng') }}
                 </a>
             </div>
-        </div>
+        </div> --}}
         <div class="box box-primary">
             <div class="box-header">
             </div>
@@ -34,16 +34,13 @@
                     <thead>
                         <tr>
 {{--                             <th>Check box</th> --}}
-                            <th>Tên phòng</th>
-                            <th>Ngày thuê phòng</th>
-                            <th>Ngày trả phòng</th>
-                            <th>Giá Phòng (Đơn vị)</th>
-{{--                             <th>Tiền điện (Đơn vị)</th>
-                            <th>Tiền nước (Đơn vị)</th> --}}
-                            <th>Tiền cọc (Đơn vị)</th>
-                            {{-- <th>Người thuê</th> --}}
-                            {{-- <th>Trạng thái</th> --}}
-                            <th>Chỉnh sửa / Tính tiền / Xoá</th>           
+                            <th>Tháng</th>
+                            <th>Tổng</th>
+                            <th>Đã trả</th>
+                            <th>Còn lại</th>
+                            <th>Nợ</th>
+                            <th>Ngày trả</th>
+                            <th>Chỉnh sửa chi tiết</th>           
                         </tr>
                     </thead>
                 </table>
@@ -124,7 +121,7 @@ jQuery(document).ready(function($) {
     $('#tablevehilce').DataTable({
         processing:false,
         serverSide:true,
-        ajax:"{{ route('admin.bookings.bookings.indextable') }}",
+        ajax:"{{ route('admin.bills.bills.indextablebills') }}",
         columnDefs: [ {
             orderable: false,
             className: 'select-checkbox',
@@ -136,13 +133,12 @@ jQuery(document).ready(function($) {
         },
         columns:[
             // {data:'check',searchable:false},
-            {data:'tenphong',searchable:true},
-            {data:'ngaythue',searchable:true},
+            {data:'thang',searchable:true},
+            {data:'total',searchable:true},
+            {data:'datra',searchable:true},
+            {data:'conlai',searchable:true},
+            {data:'no',searchable:true},
             {data:'ngaytra',searchable:true},
-            {data:'giaphong',searchable:true},
-            // {data:'tiendien',searchable:true},
-            // {data:'tiennuoc',searchable:true},
-            {data:'tiencoc',searchable:true},
             // {data:'customer',searchable:false},
             {data:'button',searchable:false},
 

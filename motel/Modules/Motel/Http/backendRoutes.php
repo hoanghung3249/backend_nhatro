@@ -142,6 +142,22 @@ $router->group(['prefix' =>'/motel'], function (Router $router) {
         'middleware' => 'can:room.room.destroy',
     ]);
 
+    //Bills
+    $router->get('bills/{id}', [
+        'as' => 'admin.bills.bills.indexbills',
+        'uses' => 'BookingsController@indexbills',
+        'middleware' => 'can:room.room.index',
+    ]);
+    $router->get('bills-datatable', [
+        'as' => 'admin.bills.bills.indextablebills',
+        'uses' => 'BookingsController@indextablebills',
+        'middleware' => 'can:room.room.index',
+    ]);
+    $router->get('bills-detail/{id}', [
+        'as' => 'admin.bills.bills.indexbillsdetail',
+        'uses' => 'BookingsController@indexbillsdetail',
+        'middleware' => 'can:room.room.index',
+    ]);
 
 
     //Customer

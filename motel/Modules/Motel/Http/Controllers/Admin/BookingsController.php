@@ -283,6 +283,7 @@ class BookingsController extends AdminBaseController
     public function indexbillsdetail($id){ 
         $currentUser = $this->auth->user()->id;
         $last_month = Carbon::now()->subMonth()->format('Y-m');
+        $now_month = Carbon::now()->format('Y-m');
         //dd($last_month);
         $check_index = BillsDetail::where('user_id',$currentUser)
                                        ->where('bills_id',$id)
@@ -292,21 +293,68 @@ class BookingsController extends AdminBaseController
         if($check_index){
             $electricity_index = $check_index->electricity_index;
             $water_index = $check_index->water_index;
+            $owe = $check_index->owe;
 
         }else{
-            $check_index = 0;
+            $electricity_index = 0;
             $water_index = 0 ;
+            $owe = 0;
         }
         //dd((int)$electric_index);
 
         $config = Config::where('user_id',$currentUser)->first();
         $bills = Bills::with('getBooking')->where('user_id',$currentUser)->where('id',$id)->first();
-        //$bills_detail = BillsDetail::with('getBills')->with('getBooking')->with('getRoom')->where('user_id',$currentUser)->where('bills_id',$id)->first();
+        $bills_detail_month_now = BillsDetail::where('user_id',$currentUser)
+                                                ->where('bills_id',$bills->id)
+                                                ->whereRaw("DATE_FORMAT(created_at,'%Y-%m')='{$now_month}'")
+                                                ->first();
+        
         $price_room = number_format($bills->getBooking->getRoom->unit_price,0,'.','.');
 
         $room_price = $bills->getBooking->getRoom->unit_price;
-        $total = $config->payment_on_electricity + $config->payment_of_water + $config->parking + $config->trash + $config->internet + $room_price;
-        return view('motel::admin.bookings.bill_detail',compact('config','price_room','bills','electricity_index','water_index', 'total'));
+        $total = $bills_detail_month_now->payment_on_electricity + $bills_detail_month_now->payment_of_water + $bills_detail_month_now->parking + $bills_detail_month_now->trash + $bills_detail_month_now->internet + $room_price;
+        return view('motel::admin.bookings.bill_detail',compact('config','price_room','bills','electricity_index','water_index', 'total','room_price','owe','bills_detail_month_now'));
 
+    }
+    public function postBillsDetail(Request $request){
+        $currentUser = $this->auth->user()->id;
+        $now_month = Carbon::now()->format('Y-m');
+        $bills_detail_month_now = BillsDetail::where('user_id',$currentUser)
+                                                ->where('bills_id',$request->bill_id)
+                                                ->whereRaw("DATE_FORMAT(created_at,'%Y-%m')='{$now_month}'")
+                                                ->first();
+        $bill = Bills::where('user_id',$currentUser)
+                        ->where('id',$request->bill_id)
+                        ->whereRaw("DATE_FORMAT(created_at,'%Y-%m')='{$now_month}'")
+                        ->first();                                       
+        if($bills_detail_month_now && $bill){
+            $thanhtiendien = ($request->electricity_index_new - $request->electricity_index) * $request->tiendiencontroller;
+            $thanhtiennuoc = ($request->water_index_new - $request->water_index) * $request->tiennuoccontroller;
+            $thanhtiengiuxe = $request->soxe * $request->tienxecontroller;
+            $tongcong = $thanhtiendien + $thanhtiennuoc + $thanhtiengiuxe + $request->tienracinput + $request->tieninternetinput + $request->tienphonginput;
+            $conlai = $request->datrainput - ($tongcong + $request->noinput);
+            $date_paid = Carbon::parse($request->date_paid)->format('Y-m-d');
+            // dd($request->all());
+            $bill->total = $tongcong;
+            $bill->paid = $request->datrainput;
+            $bill->date_paid = $date_paid;
+            $bill->created_at = Carbon::now();
+            $bill->save();
+
+            $bills_detail_month_now->payment_on_electricity = $thanhtiendien;
+            $bills_detail_month_now->payment_of_water = $thanhtiennuoc;
+            $bills_detail_month_now->parking = $thanhtiengiuxe;
+            $bills_detail_month_now->trash = $request->tienracinput;
+            $bills_detail_month_now->internet = $request->tieninternetinput;
+            $bills_detail_month_now->electricity_index = $request->electricity_index_new;
+            $bills_detail_month_now->water_index = $request->water_index_new;
+            $bills_detail_month_now->number_of_bike = $request->soxe;
+            $bills_detail_month_now->room_rates = $request->tienphonginput;
+            $bills_detail_month_now->owe = $request->conlai;
+            $bills_detail_month_now->created_at = Carbon::now();
+            $bills_detail_month_now->save();
+            return redirect()->back()->withInput($request->input())
+            ->withSuccess(trans('Cập nhật hoá đơn tháng thành công')); 
+        }
     }
 }

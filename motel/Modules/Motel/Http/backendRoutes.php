@@ -158,6 +158,11 @@ $router->group(['prefix' =>'/motel'], function (Router $router) {
         'uses' => 'BookingsController@indexbillsdetail',
         'middleware' => 'can:room.room.index',
     ]);
+    $router->post('bills-detail/create', [
+        'as' => 'admin.bills.bills.postbillsdetail',
+        'uses' => 'BookingsController@postBillsDetail',
+        'middleware' => 'can:room.room.create',
+    ]);
 
 
     //Customer

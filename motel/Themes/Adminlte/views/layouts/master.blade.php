@@ -123,6 +123,7 @@
 
 @section('scripts')
 <script type="text/javascript" src="{{ asset('js/jquery-ui.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/jquery.masknumber.js') }}"></script>
 <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js')}}"></script>
 {{-- {!! JsValidator::formRequest('Modules\User\Http\Requests\CreateUserRequest') !!} --}}
 @show

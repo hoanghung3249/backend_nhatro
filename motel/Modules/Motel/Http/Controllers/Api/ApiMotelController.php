@@ -234,6 +234,276 @@ class ApiMotelController extends ApiController
     }
     /**
      * @SWG\Get(
+     *   path="/motel/get-news-of-current-user",
+     *   description="",
+     *   summary="",
+     *   operationId="",
+     *   @SWG\Parameter(
+     *     description="",
+     *     in="query",
+     *     name="limit",
+     *     required=false,
+     *     type="integer",
+     *     default="10"
+     *   ),
+     *   @SWG\Parameter(
+     *     description="",
+     *     in="query",
+     *     name="page",
+     *     required=false,
+     *     type="integer",
+     *     default="1"
+     *   ),
+     * @SWG\Parameter(name="MT-API-KEY",in="header",required=true,type="string",description="Authorise connection",default="dev-api-key"),
+     *   produces={"application/json"},
+     *   tags={"Motel"},
+     *   @SWG\Response(response=401, description="unauthorized"),
+     *   @SWG\Response(response=200, description="Success"),
+     *   security={
+     *       {"api_key": {}}
+     *   }
+     * )
+     */
+    public function getNewsOfCurrenUser(Request $request){
+        $perPage = $request->has('limit') ? $request->get('limit') : 10;
+        $currentPage = $request->has('page') ? $request->get('page') : 1;
+        //return $country;
+        $data = $this->motel->getNewsOfCurrenUser();
+        //return $data;
+
+        $total = count($data->get());
+        $news = $data->paginate($perPage);
+        $paginate = new Paginator($data, $total, $perPage, $currentPage);
+
+        $news = $news->toarray();
+        //foreach($news )
+        if(count($news) > 0){
+             return $this->respondWithPagination($paginate,$news['data'],'Get list news');
+        }
+        else{
+            return $this->respondNotFound('Not Found');
+        }
+    }
+    /**
+     * @SWG\Get(
+     *   path="/motel/get-news-liked-of-user",
+     *   description="",
+     *   summary="",
+     *   operationId="",
+     *   @SWG\Parameter(
+     *     description="",
+     *     in="query",
+     *     name="limit",
+     *     required=false,
+     *     type="integer",
+     *     default="10"
+     *   ),
+     *   @SWG\Parameter(
+     *     description="",
+     *     in="query",
+     *     name="page",
+     *     required=false,
+     *     type="integer",
+     *     default="1"
+     *   ),
+     * @SWG\Parameter(name="MT-API-KEY",in="header",required=true,type="string",description="Authorise connection",default="dev-api-key"),
+     *   produces={"application/json"},
+     *   tags={"Motel"},
+     *   @SWG\Response(response=401, description="unauthorized"),
+     *   @SWG\Response(response=200, description="Success"),
+     *   security={
+     *       {"api_key": {}}
+     *   }
+     * )
+     */
+    public function getNewsLikedOfUser(Request $request){
+        $perPage = $request->has('limit') ? $request->get('limit') : 10;
+        $currentPage = $request->has('page') ? $request->get('page') : 1;
+        //return $country;
+        $data = $this->motel->getNewsLikedOfUser();
+        //return $data;
+
+        $total = count($data->get());
+        $news = $data->paginate($perPage);
+        $paginate = new Paginator($data, $total, $perPage, $currentPage);
+
+        $news = $news->toarray();
+        //foreach($news )
+        if(count($news) > 0){
+             return $this->respondWithPagination($paginate,$news['data'],'Get list news');
+        }
+        else{
+            return $this->respondNotFound('Not Found');
+        }
+    }
+    /**
+     * @SWG\Get(
+     *   path="/motel/delete-news-of-user",
+     *   description="",
+     *   summary="",
+     *   operationId="",
+     *   @SWG\Parameter(
+     *     description="",
+     *     in="query",
+     *     name="id",
+     *     required=false,
+     *     type="integer",
+     *   ),
+     *   @SWG\Parameter(name="MT-API-KEY",in="header",required=true,type="string",description="Authorise connection",default="dev-api-key"),
+     *   produces={"application/json"},
+     *   tags={"Motel"},
+     *   @SWG\Response(response=401, description="unauthorized"),
+     *   @SWG\Response(response=200, description="Success"),
+     *   security={
+     *       {"api_key": {}}
+     *   }
+     * )
+     */
+    public function deleteNewsOfUser(Request $request){
+        $id = $request->id;
+        $data = $this->motel->deleteNewsOfUser($id);
+        if($data == true){
+           return $this->respond([
+                'status' => 'success',
+                'status_code' => 200,
+                'message' => "Delete successful",
+            ]);        
+        }else{
+            return $this->respondNotFound('Not Found');
+        }
+    }
+    /**
+     * @SWG\Get(
+     *   path="/motel/unlike-news-by-user",
+     *   description="",
+     *   summary="",
+     *   operationId="",
+     *   @SWG\Parameter(
+     *     description="",
+     *     in="query",
+     *     name="id",
+     *     required=false,
+     *     type="integer",
+     *   ),
+     *   @SWG\Parameter(name="MT-API-KEY",in="header",required=true,type="string",description="Authorise connection",default="dev-api-key"),
+     *   produces={"application/json"},
+     *   tags={"Motel"},
+     *   @SWG\Response(response=401, description="unauthorized"),
+     *   @SWG\Response(response=200, description="Success"),
+     *   security={
+     *       {"api_key": {}}
+     *   }
+     * )
+     */
+    public function unlikeNewsByUser(Request $request){
+        $id = $request->id;
+        $data = $this->motel->unlikeNewsByUser($id);
+        if($data == true){
+           return $this->respond([
+                'status' => 'success',
+                'status_code' => 200,
+                'message' => "Unlike successful",
+            ]);        
+        }else{
+            return $this->respondNotFound('Not Found');
+        }
+    }
+    /**
+     * @SWG\Get(
+     *   path="/motel/like-news",
+     *   description="",
+     *   summary="",
+     *   operationId="",
+     *   @SWG\Parameter(
+     *     description="",
+     *     in="query",
+     *     name="id",
+     *     required=false,
+     *     type="integer",
+     *   ),
+     *   @SWG\Parameter(name="MT-API-KEY",in="header",required=true,type="string",description="Authorise connection",default="dev-api-key"),
+     *   produces={"application/json"},
+     *   tags={"Motel"},
+     *   @SWG\Response(response=401, description="unauthorized"),
+     *   @SWG\Response(response=200, description="Success"),
+     *   security={
+     *       {"api_key": {}}
+     *   }
+     * )
+     */
+    public function likeNews(Request $request){
+        $id = $request->id;
+        $data = $this->motel->likeNews($id);
+        if($data == true){
+           return $this->respond([
+                'status' => 'success',
+                'status_code' => 200,
+                'message' => "Like successful",
+            ]);        
+        }
+    }
+    /**
+     * @SWG\Get(
+     *   path="/motel/get-room-of-user",
+     *   description="",
+     *   summary="",
+     *   operationId="",
+     *   @SWG\Parameter(
+     *     description="",
+     *     in="query",
+     *     name="limit",
+     *     required=false,
+     *     type="integer",
+     *     default="10"
+     *   ),
+     *   @SWG\Parameter(
+     *     description="",
+     *     in="query",
+     *     name="page",
+     *     required=false,
+     *     type="integer",
+     *     default="1"
+     *   ),
+     *   @SWG\Parameter(name="MT-API-KEY",in="header",required=true,type="string",description="Authorise connection",default="dev-api-key"),
+     *   produces={"application/json"},
+     *   tags={"Motel"},
+     *   @SWG\Response(response=401, description="unauthorized"),
+     *   @SWG\Response(response=200, description="Success"),
+     *   security={
+     *       {"api_key": {}}
+     *   }
+     * )
+     */
+    public function getRoomOfUser(Request $request){
+        $perPage = $request->has('limit') ? $request->get('limit') : 10;
+        $currentPage = $request->has('page') ? $request->get('page') : 1;
+
+        $data = $this->motel->getRoomOfUser();
+
+        $total = count($data->get());
+        $room = $data->paginate($perPage);
+        $paginate = new Paginator($data, $total, $perPage, $currentPage);
+
+        $room = $room->toarray();
+        //foreach($news )
+        if(count($room) > 0){
+             return $this->respondWithPagination($paginate,$room['data'],'Get list room');
+        }
+        else{
+            return $this->respondNotFound('Not Found');
+        }
+
+
+        if($data == true){
+           return $this->respond([
+                'status' => 'success',
+                'status_code' => 200,
+                'message' => "Delete successful",
+            ]);        
+        }
+    }
+    /**
+     * @SWG\Get(
      *   path="/motel/filter-motel",
      *   description="",
      *   summary="",

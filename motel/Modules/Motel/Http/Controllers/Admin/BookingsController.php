@@ -276,7 +276,7 @@ class BookingsController extends AdminBaseController
                     ->addColumn('check', '<input class = "check" type="checkbox" name="selected_room[]" value="{{ $id }}">')
                     ->addColumn('button', '<div class ="button_action">
                                 <a title=Edit Room" class="btn btn-default btn-flat" href="{{ route("admin.bills.bills.indexbillsdetail",$id) }}" style="margin-right:3px"><i class="fa fa-pencil"></i></a>
-                                <button title="Delete Room" class="btn btn-danger btn-sm btn-flat" data-toggle="modal" data-target="#modal-delete-confirmation" data-action-target="{{route("admin.bookings.bookings.destroy",$id)}}"><i class="fa fa-trash"></i></button> </div>
+                                <button title="Delete Room" class="btn btn-danger btn-sm btn-flat" data-toggle="modal" data-target="#modal-delete-confirmation" data-action-target="{{route("admin.bills.bills.destroy",$id)}}"><i class="fa fa-trash"></i></button> </div>
                                 ')
                     ->rawColumns(['check', 'action','button','select'])->make(true);        
     }
@@ -312,7 +312,13 @@ class BookingsController extends AdminBaseController
         $price_room = number_format($bills->getBooking->getRoom->unit_price,0,'.','.');
 
         $room_price = $bills->getBooking->getRoom->unit_price;
+        $total_cofig = $config->payment_on_electricity + $config->payment_of_water + $config->parking + $config->trash + $config->internet + $room_price;
         $total = $bills_detail_month_now->payment_on_electricity + $bills_detail_month_now->payment_of_water + $bills_detail_month_now->parking + $bills_detail_month_now->trash + $bills_detail_month_now->internet + $room_price;
+        if($bills_detail_month_now->payment_on_electricity == null || $bills_detail_month_now->payment_of_water == null || $bills_detail_month_now->parking == null || $bills_detail_month_now->trash == null || $bills_detail_month_now->internet == null){
+            $total = $total_cofig;
+        }else{
+            $total = $total;
+        }
         return view('motel::admin.bookings.bill_detail',compact('config','price_room','bills','electricity_index','water_index', 'total','room_price','owe','bills_detail_month_now'));
 
     }
@@ -327,7 +333,8 @@ class BookingsController extends AdminBaseController
                         ->where('id',$request->bill_id)
                         ->whereRaw("DATE_FORMAT(created_at,'%Y-%m')='{$now_month}'")
                         ->first();                                       
-        if($bills_detail_month_now && $bill){
+        if($bills_detail_month_now || $bill){
+            //dd(Carbon::now()->endOfMonth());
             $thanhtiendien = ($request->electricity_index_new - $request->electricity_index) * $request->tiendiencontroller;
             $thanhtiennuoc = ($request->water_index_new - $request->water_index) * $request->tiennuoccontroller;
             $thanhtiengiuxe = $request->soxe * $request->tienxecontroller;
@@ -356,5 +363,51 @@ class BookingsController extends AdminBaseController
             return redirect()->back()->withInput($request->input())
             ->withSuccess(trans('Cập nhật hoá đơn tháng thành công')); 
         }
+    }
+    public function billCreate(){
+        $currentUser = $this->auth->user()->id;
+        $now_month = Carbon::now()->format('Y-m');
+        $this_month = Carbon::now()->format('m');
+        $bills_detail_month_now = BillsDetail::where('user_id',$currentUser)
+                                                ->whereRaw("DATE_FORMAT(created_at,'%Y-%m')='{$now_month}'")
+                                                ->first();
+        $bill = Bills::where('user_id',$currentUser)
+                        ->whereRaw("DATE_FORMAT(created_at,'%Y-%m')='{$now_month}'")
+                        ->first();
+        if($bills_detail_month_now || $bill){
+            return redirect()->back()
+            ->withError(trans('Hóa đơn của tháng này đã được tạo')); 
+        }else{
+            $booking_id = session()->get("id");
+
+            $bill = new Bills();
+            $bill->user_id = $currentUser;
+            $bill->booking_id = $booking_id;
+            $bill->created_at = Carbon::now();
+            $bill->save();
+
+            $bill_detail = new BillsDetail();
+            $bill_detail->user_id = $currentUser;
+            $bill_detail->bills_id = $bill->id;
+            $bill_detail->created_at = Carbon::now();
+            $bill_detail->save();
+            //session()->forgot('id');
+            return redirect()->back()
+            ->withSuccess("Hóa đơn tháng $this_month đã được tạo thành công");
+        }                              
+    }
+    public function destroyBills($id){
+        $currentUser = $this->auth->user()->id;
+        $booking_id = session()->get("id");
+        $bill = Bills::where('id',$id)->where('user_id',$currentUser)->where('booking_id',$booking_id)->first();
+        if($bill){
+            $bill_detail = BillsDetail::where('bills_id',$id)->where('user_id',$currentUser)->first();
+            if($bill_detail){
+                $bill->delete();
+                $bill_detail->delete();
+            }
+            return redirect()->back()
+            ->withSuccess("Xóa hóa đơn thành công");
+        }  
     }
 }

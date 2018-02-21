@@ -16,7 +16,9 @@ use DB;
 use File;
 use Modules\User\Entities\Activation;
 use Modules\Motel\Entities\News;
+use Modules\Motel\Entities\Room;
 use Modules\Motel\Entities\Imgs;
+use Modules\Motel\Entities\MappingNewsUser;
 
 class EloquentMotelRepository extends EloquentBaseRepository implements MotelRepository
 {
@@ -166,6 +168,11 @@ class EloquentMotelRepository extends EloquentBaseRepository implements MotelRep
 
 		}
 	}
+	public function getRoomOfUser(){
+		$user = Auth::guard('api')->user();
+		$room = Room::where('user_id',$user->id)->orderBy('id','DESC');
+		return $room;
+	}
 	public function getNews($country){
 		//return $country;
 		$news = News::selectRaw('news.*, users.email as created_by,users.first_name,users.last_name,users.avatar')
@@ -179,6 +186,77 @@ class EloquentMotelRepository extends EloquentBaseRepository implements MotelRep
 				$news->orderBy('id','DESC');
 		return $news;
 
+	}
+	public function getNewsOfCurrenUser(){
+		$user = Auth::guard('api')->user();
+		$news = News::selectRaw('news.*, users.email as created_by,users.first_name,users.last_name,users.avatar')
+		->with(array('image'=>function($query){
+        	 //$query->select('sub_image','sub_image_thumb');
+   		}))
+		->where('status',1)
+		->where('user_id',$user->id)
+				//->with('user')
+				->join('users', 'users.id', '=', 'news.user_id');
+				//->join('image', 'image.new_id', '=', 'news.id');
+				$news->orderBy('id','DESC');
+		return $news;
+
+	}
+	public function deleteNewsOfUser($id){
+		$user = Auth::guard('api')->user();
+		$news = News::where('id',$id)->where('user_id',$user->id)->first();
+		if($news){
+			$images = Imgs::where('new_id',$news->id)->get();
+			if(count($images)>0){
+				foreach($images as $value){
+			      if(File::exists($value->sub_image)){
+			          File::delete($value->sub_image);
+			      }
+			      if(File::exists($value->sub_image_thumb)){
+			          File::delete($value->sub_image_thumb);
+			      }
+			      $value->delete();
+				}
+				
+			}
+			$news->delete();
+			return true;
+		}
+
+	}
+	public function likeNews($id){
+		$user = Auth::guard('api')->user();
+		$data = new MappingNewsUser();
+		$data->user_id = $user->id;
+		$data->news_id = $id;
+		$data->save();
+		return true;
+
+	}
+	public function getNewsLikedOfUser(){
+		$user = Auth::guard('api')->user();
+		$news = News::selectRaw('news.*, users.email as created_by,users.first_name,users.last_name,users.avatar')
+		->with(array('image'=>function($query){
+        	 //$query->select('sub_image','sub_image_thumb');
+   		}))
+		->where('status',1)
+		//->where('mapping_news_users.user_id',$user->id)
+				//->with('user')
+		->join('users', 'users.id', '=', 'news.user_id')
+		->join('mapping_news_users', 'mapping_news_users.news_id', '=', 'news.id')
+		//->join('users', 'mapping_news_users.user_id', '=', 'users.id')
+		->where('news.user_id',$user->id);
+		$news->orderBy('id','DESC');
+		return $news;		
+	}
+	public function unlikeNewsByUser($id){
+		$user = Auth::guard('api')->user();
+		$data = MappingNewsUser::where('user_id',$user->id)->where('news_id',$id)->first();
+		if($data){
+			$data->delete();
+			return true;
+		}
+		
 	}
 	public function getListFilter($latitude, $longitude, $limit, $unit_price = 0){
 		if($unit_price == 1 ){

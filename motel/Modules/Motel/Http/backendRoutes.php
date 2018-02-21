@@ -163,9 +163,18 @@ $router->group(['prefix' =>'/motel'], function (Router $router) {
         'uses' => 'BookingsController@postBillsDetail',
         'middleware' => 'can:room.room.create',
     ]);
+    $router->get('bill/create', [
+        'as' => 'admin.bills.bills.billcreate',
+        'uses' => 'BookingsController@billCreate',
+        'middleware' => 'can:room.room.index',
+    ]);
+    $router->delete('bills-delete/{id}', [
+        'as' => 'admin.bills.bills.destroy',
+        'uses' => 'BookingsController@destroyBills',
+        'middleware' => 'can:room.room.destroy',
+    ]);
 
-
-    //Customer
+        //Customer
     $router->get('customer-list', [
         'as' => 'admin.customer.customer.index',
         'uses' => 'CustomerController@index',

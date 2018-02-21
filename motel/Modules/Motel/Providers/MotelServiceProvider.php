@@ -41,6 +41,7 @@ class MotelServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerMiddleware();
+        //$this->registerCommands();
         $this->publishConfig('motel', 'permissions');
 
         $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
@@ -78,5 +79,11 @@ class MotelServiceProvider extends ServiceProvider
         foreach ($this->middleware as $name => $class) {
             $this->app['router']->aliasMiddleware($name, $class);
         }
+    }
+    public function registerCommands()
+    {
+        $this->commands([
+            \Modules\Motel\Console\TaoHoaDonTheoThangCommand::class,
+        ]);
     }
 }

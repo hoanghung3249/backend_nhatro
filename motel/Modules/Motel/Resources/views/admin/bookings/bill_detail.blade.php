@@ -6,7 +6,7 @@
     <script src="jquery.masknumber.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" />
 <h1>
-    {{ trans('Hóa đơn tháng ...') }}
+    {{ trans("Hóa đơn tháng") }} {{ Carbon\Carbon::now()->timezone('Asia/Ho_Chi_Minh')->format('m') }}
 </h1>
 
 <ol class="breadcrumb">
@@ -38,7 +38,7 @@
             <form action="{{ route('admin.bills.bills.postbillsdetail') }}" method="POST" class="form-inline" style="padding-top: 15px">
             <input type="hidden" name="bill_id" value="{{$bills->id}}">
             {{ csrf_field() }}
-                <table id="tablevehilce" class="table table-bordered table-hover data-table" cellspacing="5" width="100%">
+                <table id="tablevehilce" class="table table-bordered table-hover data-table" cellspacing="0" width="100%">
                     <thead>
                         <tr>
                             <th width="10%">Nội dung thanh toán</th>
@@ -124,7 +124,7 @@
                                 <div class="form-group{{ $errors->has('erea') ? ' has-error' : '' }}">
                                         {!! Form::label('paid_day', 'Ngày trả') !!}
                                     <div class='input-group date' id='datetimepicker2'>
-                                        <input type='text' class="form-control" value="{{ old('paid_day') }}" name="paid_day" />
+                                        <input type='text' class="form-control" @if($bills->date_paid != null) value="{{ Carbon\Carbon::parse($bills->date_paid)->timezone('Asia/Ho_Chi_Minh')->format('d-m-Y')}}" @endif name="paid_day" />
                                         <span class="input-group-addon">
                                             <span class="glyphicon glyphicon-calendar"></span>
                                         </span>
@@ -133,12 +133,12 @@
                                 </div>
                             </td>
                             <td style="font-weight: bold;" align="right">Đã trả</td>
-                            <td align="right" style="font-weight: bold;"><input id="datra" align="right" class="form-control" data-thousands="." type="text" name="datra"></td>
+                            <td align="right" style="font-weight: bold;"><input id="datra" align="right" class="form-control" data-thousands="." type="text" name="datra" @if($bills->date_paid != null) value="{{number_format($bills->paid,0,'.','.') }}" @endif></td>
                             <input type="hidden" id="datrainput" name="datrainput" value="0">
                         </tr>
                         <tr>
                             <td colspan="5" style="font-weight: bold;" align="right">Còn lại</td>
-                            <td align="right" style="font-weight: bold;" id="conlai"></td>
+                            <td align="right" style="font-weight: bold;" id="conlai">@if($bills->paid==null || $bills->paid == 0) {{ number_format($total,0,'.','.') }} @else {{ number_format($total-$bills->paid,0,'.','.') }} @endif</td>
                             <input type="hidden" id="conlaiinput" name="conlaiinput" value="0">
                         </tr>
                     </tbody>

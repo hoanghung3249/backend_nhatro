@@ -18,13 +18,13 @@
 </style>
 <div class="row">
     <div class="col-xs-12">
-{{--         <div class="row">
+        <div class="row">
             <div class="btn-group pull-right" style="margin: 0 15px 15px 0;">
-                <a href="{{ route('admin.bookings.bookings.create') }}" class="btn btn-primary btn-flat" style="padding: 4px 10px;">
-                    <i class="fa fa-pencil"></i> {{ trans('Tạo thủ tục thuê phòng') }}
+                <a href="{{ route('admin.bills.bills.billcreate') }}" class="btn btn-primary btn-flat" style="padding: 4px 10px;">
+                    <i class="fa fa-pencil"></i> {{ trans('Tạo hóa đơn tháng') }} {{ Carbon\Carbon::now()->format('m') }}
                 </a>
             </div>
-        </div> --}}
+        </div>
         <div class="box box-primary">
             <div class="box-header">
             </div>

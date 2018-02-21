@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         // Commands\Inspire::class,
+        \Modules\Motel\Console\TaoHoaDonTheoThangCommand::class,
     ];
 
     /**
@@ -24,7 +25,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        $last_day_of_month = Carbon::now()->endOfMonth()->format('d');
+        $schedule->command('motel:create-bill')
+                 ->monthlyOn($last_day_of_month, '23:59');
     }
 }

@@ -52,9 +52,9 @@ class PublicController extends BasePublicController
 
         $template = $this->getTemplateForPage($page);
 
-        return view($template, compact('page'));
+        //return view($template, compact('page'));
+        return redirect('/backend');
     }
-
     /**
      * Find a page for the given slug.
      * The slug can be a 'composed' slug via the Menu

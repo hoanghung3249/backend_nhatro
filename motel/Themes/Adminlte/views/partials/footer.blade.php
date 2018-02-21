@@ -19,6 +19,6 @@
     </div>
 
     @yield('footer')
-    <strong>Copyright © {{ date('Y')}} <a href="http://asgardcms.com" target="_blank">AsgardCms</a></strong>
+    <strong>Copyright © {{ date('Y')}} <a href="https://www.facebook.com/tuandien.hehe" target="_blank">Tuấn Nguyễn</a></strong>
 </footer>
 

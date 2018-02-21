@@ -10,7 +10,7 @@
     </div>
     <!-- /.login-logo -->
     <div class="login-box-body">
-        <p class="login-box-msg">{{ trans('user::auth.sign in welcome message') }}</p>
+        <p class="login-box-msg">{{ trans('Chào mừng bạn đến với trang quản trị') }}</p>
         @include('partials.notifications')
 
         {!! Form::open(['route' => 'login.post']) !!}
@@ -30,19 +30,19 @@
                 <div class="col-xs-8">
                     <div class="checkbox icheck">
                         <label>
-                            <input type="checkbox" name="remember_me"> {{ trans('user::auth.remember me') }}
+                            <input type="checkbox" name="remember_me"> {{ trans('Ghi Nhớ') }}
                         </label>
                     </div>
                 </div>
                 <div class="col-xs-4">
                     <button type="submit" class="btn btn-primary btn-block btn-flat">
-                        {{ trans('user::auth.login') }}
+                        {{ trans('Đăng nhập') }}
                     </button>
                 </div>
             </div>
         </form>
 
-        <a href="{{ route('reset')}}">{{ trans('user::auth.forgot password') }}</a><br>
+        <a href="{{ route('reset')}}">{{ trans('Quên mật khẩu?') }}</a><br>
         @if (config('asgard.user.config.allow_user_registration'))
             <a href="{{ route('register')}}" class="text-center">{{ trans('user::auth.register')}}</a>
         @endif

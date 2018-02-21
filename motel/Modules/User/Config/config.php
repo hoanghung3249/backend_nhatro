@@ -41,7 +41,7 @@ return [
     | Allow anonymous user registration
     |--------------------------------------------------------------------------
     */
-    'allow_user_registration' => true,
+    'allow_user_registration' => false,
     /*
     |--------------------------------------------------------------------------
     | The default role for new user registrations

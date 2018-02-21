@@ -55,11 +55,12 @@ class AuthController extends BasePublicController
         $error = $this->auth->login($credentials, $remember);
 
         if ($error) {
-            return redirect()->back()->withInput()->withError($error);
+            //$error
+            return redirect()->back()->withInput()->withError('Email hoặc password không trùng khớp');
         }
 
         return redirect()->intended(route(config('asgard.user.config.redirect_route_after_login')))
-                ->withSuccess(trans('user::messages.successfully logged in'));
+                ->withSuccess(trans('Đăng nhập thành công'));
     }
 
     public function getRegister()

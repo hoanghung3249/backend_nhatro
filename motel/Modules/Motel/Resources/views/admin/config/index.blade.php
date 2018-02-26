@@ -32,7 +32,8 @@
             <div class="box-body table-responsive">
             <form action="{{ route('admin.config.config.post') }}" method="POST" class="form-inline" style="padding-top: 15px">
             {{ csrf_field() }}
-                <table id="tablevehilce" class="table table-bordered table-hover data-table" cellspacing="0" width="100%">
+                <table id="tablevehilce" class="table table-bordered table-hover " cellspacing="0" width="100%">
+                    {{-- class="data-table" --}}
                     <thead>
                         <tr>
                             <th width="30%">Phí</th>

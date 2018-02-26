@@ -7,7 +7,8 @@
     "order": 1,
     "providers": [
         "Modules\\Motel\\Providers\\MotelServiceProvider",
-        "Modules\\Motel\\Providers\\RouteServiceProvider"
+        "Modules\\Motel\\Providers\\RouteServiceProvider",
+        "Modules\\Motel\\Providers\\MotelEventServiceProvider"
     ],
     "aliases": {},
     "files": [

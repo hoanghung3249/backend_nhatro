@@ -7,6 +7,7 @@ use Modules\Core\Traits\CanPublishConfiguration;
 use Modules\Core\Events\BuildingSidebar;
 use Modules\Motel\Events\Handlers\RegisterMotelSidebar;
 use Modules\Motel\Http\Middleware\MotelAuthorisedApiKey;
+use Modules\Motel\Http\Middleware\CheckRouteSuccess;
 
 class MotelServiceProvider extends ServiceProvider
 {
@@ -29,6 +30,7 @@ class MotelServiceProvider extends ServiceProvider
      */
     protected $middleware = [
         'motel.api.key' => MotelAuthorisedApiKey::class,
+        'motel.api.checksessionmessage' => CheckRouteSuccess::class,
     ];
 
 

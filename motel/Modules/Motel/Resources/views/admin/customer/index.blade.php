@@ -152,6 +152,24 @@ jQuery(document).ready(function($) {
             style:    'os',
             selector: 'td:first-child'
         },
+        language: {
+            "lengthMenu": "Hiển thị _MENU_ dữ liệu trên 1 trang",
+            "zeroRecords": "Không tìm thấy dữ liệu nào trùng khớp",
+            "info": "Hiển thị trang _PAGE_ trong tổng _PAGES_ trang",
+            "infoEmpty": "Không có dữ liệu",
+            "search":         "Tìm kiếm:",
+            "infoFiltered": "(Đã tìm kiếm trong tổng cộng _MAX_ dữ liệu)",
+            "paginate": {
+                "first":      "Trang đầu",
+                "last":       "Trang cuối",
+                "next":       "Kế tiếp",
+                "previous":   "Lùi lại"
+            },
+            "aria": {
+                "sortAscending":  ": activate to sort column ascending",
+                "sortDescending": ": activate to sort column descending"
+            },
+        },
         columns:[
             {data:'check',searchable:false},
             {data:'fullname',searchable:true},

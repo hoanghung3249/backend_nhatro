@@ -16,7 +16,7 @@
 <ol class="breadcrumb">
     <li><a href="{{ URL::route('dashboard.index') }}"><i class="fa fa-dashboard"></i> {{ trans('core::core.breadcrumb.home') }}</a></li>
     <li class=""><a href="{{ URL::route('admin.room.room.index') }}">{{ trans('Danh sách phòng') }}</a></li>
-    <li class="active">{{ trans('user::users.breadcrumb.new') }}</li>
+    <li class="active">{{ trans('Tạo mới') }}</li>
 </ol>
 @stop
 
@@ -79,8 +79,8 @@
                     </div>
                 </div>
                 <div class="box-footer">
-                    <button type="submit" class="btn btn-primary btn-flat">{{ trans('user::button.create') }}</button>
-                    <a class="btn btn-danger pull-right btn-flat" href="{{ URL::route('admin.room.room.index')}}"><i class="fa fa-times"></i> {{ trans('user::button.cancel') }}</a>
+                    <button type="submit" class="btn btn-primary btn-flat">{{ trans('Tạo mới') }}</button>
+                    <a class="btn btn-danger pull-right btn-flat" href="{{ URL::route('admin.room.room.index')}}"><i class="fa fa-times"></i> {{ trans('Hủy bỏ') }}</a>
                 </div>
             </div>
         </div>

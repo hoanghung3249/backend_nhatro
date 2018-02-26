@@ -105,11 +105,11 @@ class AuthController extends BasePublicController
             app(UserResetter::class)->startReset($request->all());
         } catch (UserNotFoundException $e) {
             return redirect()->back()->withInput()
-                ->withError(trans('user::messages.no user found'));
+                ->withError(trans('Không tìm thấy người dùng này'));
         }
 
         return redirect()->route('reset')
-            ->withSuccess(trans('user::messages.check email to reset password'));
+            ->withSuccess(trans('Vui lòng kiểm tra hộp mail và làm theo hướng dẫn để khôi phục mật khẩu'));
     }
 
     public function getResetComplete()
@@ -128,10 +128,10 @@ class AuthController extends BasePublicController
                 ->withError(trans('user::messages.user no longer exists'));
         } catch (InvalidOrExpiredResetCode $e) {
             return redirect()->back()->withInput()
-                ->withError(trans('user::messages.invalid reset code'));
+                ->withError(trans('Mã xác nhận không trùng khớp'));
         }
 
         return redirect()->route('login')
-            ->withSuccess(trans('user::messages.password reset'));
+            ->withSuccess(trans('Đổi mật khẩu thành công'));
     }
 }

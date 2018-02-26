@@ -28,6 +28,7 @@ $router->group(['prefix' =>'/'], function (Router $router) {
             'uses' => '\Modules\User\Http\Controllers\Frontend\ResetpasswordController@getResetpassword',
         ]);
       $router->get('reset-password-success', [
+            'middleware' => 'motel.api.checksessionmessage',
             'as' =>'resetpasswordsuccess',
             'uses' => '\Modules\User\Http\Controllers\Frontend\ResetpasswordController@getShowmessage',
         ]);

@@ -1,7 +1,7 @@
 @extends('layouts.account')
 
 @section('title')
-    {{ trans('user::auth.reset password') }} | @parent
+    {{ trans('Khôi phục mật khẩu') }} | @parent
 @stop
 
 @section('content')
@@ -10,7 +10,7 @@
     </div>
     <!-- /.login-logo -->
     <div class="login-box-body">
-        <p class="login-box-msg">{{ trans('user::auth.to reset password complete this form') }}</p>
+        <p class="login-box-msg">{{ trans('Nhập vào email đăng ký để khôi phục mật khẩu') }}</p>
         @include('partials.notifications')
 
         {!! Form::open(['route' => 'reset.post']) !!}
@@ -24,12 +24,12 @@
             <div class="row">
                 <div class="col-xs-12">
                     <button type="submit" class="btn btn-primary btn-block btn-flat pull-right">
-                        {{ trans('user::auth.reset password') }}
+                        {{ trans('Khôi phục mật khẩu') }}
                     </button>
                 </div>
             </div>
         {!! Form::close() !!}
 
-        <a href="{{ route('login') }}" class="text-center">{{ trans('user::auth.I remembered my password') }}</a>
+        <a href="{{ route('login') }}" class="text-center">{{ trans('Tôi đã nhớ lại mật khẩu') }}</a>
     </div>
 @stop

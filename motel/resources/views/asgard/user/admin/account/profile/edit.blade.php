@@ -2,11 +2,11 @@
 
 @section('content-header')
 <h1>
-    {{ trans('user::users.title.edit-profile') }}
+    {{ trans('Chỉnh sửa thông tin cá nhân') }}
 </h1>
 <ol class="breadcrumb">
     <li><a href="{{ URL::route('dashboard.index') }}"><i class="fa fa-dashboard"></i> {{ trans('core::core.breadcrumb.home') }}</a></li>
-    <li class="active">{{ trans('user::users.breadcrumb.edit-profile') }}</li>
+    <li class="active">{{ trans('Chỉnh sửa thông tin cá nhân') }}</li>
 </ol>
 @stop
 
@@ -16,18 +16,18 @@
     <div class="col-md-12">
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
-                <li class="active"><a href="#account_tab" data-toggle="tab">{{ trans('user::users.tabs.data') }}</a></li>
-                <li class=""><a href="#password_tab" data-toggle="tab">{{ trans('user::users.tabs.new password') }}</a></li>
+                <li class="active"><a href="#account_tab" data-toggle="tab">{{ trans('Thông tin chung') }}</a></li>
+                <li class=""><a href="#password_tab" data-toggle="tab">{{ trans('Mật khẩu mới') }}</a></li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="account_tab">
                     <div class="box-body">
                         <div class="row">
                             <div class="col-md-4">
-                                {{ Form::normalInput('first_name', trans('user::users.form.first-name'), $errors, $user) }}
+                                {{ Form::normalInput('first_name', trans('Họ'), $errors, $user) }}
                             </div>
                             <div class="col-md-4">
-                                {{ Form::normalInput('last_name', trans('user::users.form.last-name'), $errors, $user) }}
+                                {{ Form::normalInput('last_name', trans('Tên'), $errors, $user) }}
                             </div>
                             <div class="col-md-4">
                                 {{ Form::normalInputOfType('email', 'email', trans('user::users.form.email'), $errors, $user) }}
@@ -40,10 +40,10 @@
                         <h4>{{ trans('user::users.new password setup') }}</h4>
                         <div class="row">
                             <div class="col-md-6">
-                                {{ Form::normalInputOfType('password', 'password', trans('user::users.form.new password'), $errors) }}
+                                {{ Form::normalInputOfType('password', 'password', trans('Mật khẩu mới'), $errors) }}
                             </div>
                             <div class="col-md-6">
-                                {{ Form::normalInputOfType('password', 'password_confirmation', trans('user::users.form.new password confirmation'), $errors) }}
+                                {{ Form::normalInputOfType('password', 'password_confirmation', trans('Nhập lại mật khẩu mới'), $errors) }}
                             </div>
                         </div>
                     </div>

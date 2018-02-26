@@ -58,10 +58,10 @@ class RoomController extends AdminBaseController
                 	->addColumn('select', function(Room $room) {
                     		if($room->status==1){
                     			return '<div id="check'.$room->id.'" class="check-stt" data-value="'.$room->id.'" status="1">
-                			<span class="label label-success" style="cursor: pointer; padding:7px" >Còn trống</span></div>';
+                			<span class="label label-success" style=" padding:7px" >Còn trống</span></div>';
                     		}else{
                     			return '<div id="check'.$room->id.'" class="check-stt" data-value="'.$room->id.'" status="0">
-                			<span class="label label-danger" style="cursor: pointer; padding:7px" >Đang thuê</span></div>';
+                			<span class="label label-danger" style=" padding:7px" >Đang thuê</span></div>';
                     		}
                 		})
                     ->addColumn('check', '<input class = "check" type="checkbox" name="selected_room[]" value="{{ $id }}">')

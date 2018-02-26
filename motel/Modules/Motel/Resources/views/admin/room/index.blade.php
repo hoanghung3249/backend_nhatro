@@ -86,7 +86,7 @@
 
 @push('js-stack')
 <?php $locale = App::getLocale(); ?>
-<script type="text/javascript">
+{{-- <script type="text/javascript">
 jQuery(document).ready(function($) {
     //alert(123);
     $("#tablevehilce").on('click',".check-stt",function(){
@@ -114,7 +114,7 @@ jQuery(document).ready(function($) {
         
     })
 });
-</script>
+</script> --}}
 
 <script type="text/javascript">
     $(document).ready(function(){
@@ -130,6 +130,24 @@ jQuery(document).ready(function($) {
         select: {
             style:    'os',
             selector: 'td:first-child'
+        },
+        language: {
+            "lengthMenu": "Hiển thị _MENU_ dữ liệu trên 1 trang",
+            "zeroRecords": "Không tìm thấy dữ liệu nào trùng khớp",
+            "info": "Hiển thị trang _PAGE_ trong tổng _PAGES_ trang",
+            "infoEmpty": "Không có dữ liệu",
+            "search":         "Tìm kiếm:",
+            "infoFiltered": "(Đã tìm kiếm trong tổng cộng _MAX_ dữ liệu)",
+            "paginate": {
+                "first":      "Trang đầu",
+                "last":       "Trang cuối",
+                "next":       "Kế tiếp",
+                "previous":   "Lùi lại"
+            },
+            "aria": {
+                "sortAscending":  ": activate to sort column ascending",
+                "sortDescending": ": activate to sort column descending"
+            },
         },
         columns:[
             {data:'check',searchable:false},

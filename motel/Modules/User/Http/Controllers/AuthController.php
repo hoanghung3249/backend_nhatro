@@ -53,10 +53,11 @@ class AuthController extends BasePublicController
         $remember = (bool) $request->get('remember_me', false);
 
         $error = $this->auth->login($credentials, $remember);
-
+        //return $error;
         if ($error) {
             //$error
-            return redirect()->back()->withInput()->withError('Email hoặc password không trùng khớp');
+            //return 1;
+            return redirect()->back()->withInput()->withError($error);
         }
 
         return redirect()->intended(route(config('asgard.user.config.redirect_route_after_login')))

@@ -154,7 +154,7 @@ jQuery(document).ready(function($) {
         },
         language: {
             "lengthMenu": "Hiển thị _MENU_ dữ liệu trên 1 trang",
-            "zeroRecords": "Không tìm thấy dữ liệu nào trùng khớp",
+            "zeroRecords": "Không tìm thấy dữ liệu",
             "info": "Hiển thị trang _PAGE_ trong tổng _PAGES_ trang",
             "infoEmpty": "Không có dữ liệu",
             "search":         "Tìm kiếm:",

@@ -306,8 +306,9 @@ class BookingsController extends AdminBaseController
         $bills = Bills::with('getBooking')->where('user_id',$currentUser)->where('id',$id)->first();
         $bills_detail_month_now = BillsDetail::where('user_id',$currentUser)
                                                 ->where('bills_id',$bills->id)
-                                                ->whereRaw("DATE_FORMAT(created_at,'%Y-%m')='{$now_month}'")
+                                                //->whereRaw("DATE_FORMAT(created_at,'%Y-%m')='{$now_month}'")
                                                 ->first();
+                                                //dd($bills_detail_month_now);
         
         $price_room = number_format($bills->getBooking->getRoom->unit_price,0,'.','.');
 
@@ -368,17 +369,19 @@ class BookingsController extends AdminBaseController
         $currentUser = $this->auth->user()->id;
         $now_month = Carbon::now()->format('Y-m');
         $this_month = Carbon::now()->format('m');
-        $bills_detail_month_now = BillsDetail::where('user_id',$currentUser)
-                                                ->whereRaw("DATE_FORMAT(created_at,'%Y-%m')='{$now_month}'")
-                                                ->first();
+        $booking_id = session()->get("id");
+        // $bills_detail_month_now = BillsDetail::where('user_id',$currentUser)
+        //                                         ->whereRaw("DATE_FORMAT(created_at,'%Y-%m')='{$now_month}'")
+        //                                         ->first();
         $bill = Bills::where('user_id',$currentUser)
                         ->whereRaw("DATE_FORMAT(created_at,'%Y-%m')='{$now_month}'")
+                        ->where('booking_id',$booking_id)
                         ->first();
-        if($bills_detail_month_now || $bill){
+        if( $bill){
             return redirect()->back()
             ->withError(trans('Hóa đơn của tháng này đã được tạo')); 
         }else{
-            $booking_id = session()->get("id");
+            
 
             $bill = new Bills();
             $bill->user_id = $currentUser;

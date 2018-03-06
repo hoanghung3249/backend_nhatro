@@ -6,7 +6,7 @@
     <script src="jquery.masknumber.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" />
 <h1>
-    {{ trans("Hóa đơn tháng") }} {{ Carbon\Carbon::now()->timezone('Asia/Ho_Chi_Minh')->format('m') }}
+    {{ trans("Hóa đơn tháng") }} {{ Carbon\Carbon::parse($bills->created_at)->timezone('Asia/Ho_Chi_Minh')->format('m') }}
 </h1>
 
 <ol class="breadcrumb">

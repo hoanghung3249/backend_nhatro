@@ -133,7 +133,7 @@
                                 </div>
                             </td>
                             <td style="font-weight: bold;" align="right">Đã trả</td>
-                            <td align="right" style="font-weight: bold;"><input id="datra" align="right" class="form-control" data-thousands="." type="text" name="datra" @if($bills->date_paid != null) value="{{number_format($bills->paid,0,'.','.') }}" @endif></td>
+                            <td align="right" style="font-weight: bold;"><input id="datra" align="right" class="form-control" style="text-align: right;" data-thousands="." type="text" name="datra" @if($bills->date_paid != null) value="{{number_format($bills->paid,0,'.','.') }}" @endif></td>
                             <input type="hidden" id="datrainput" name="datrainput" value="0">
                         </tr>
                         <tr>
@@ -207,9 +207,15 @@
         $('#datra').maskNumber({
           integer: true,
         });
-        $('#datra').blur(function(){
-            $(this).css("float","right");
+        $('#datra').click(function(e){
+            //alert(1);
+            e.stopPropagation();
+            $(this).css("text-align","");
         })
+        $(document).click(function() {
+            $('#datra').css("text-align","right");
+        })
+
         $(".update").on("click",function(){
             if($("#chisodiencu").val()){
                 var chisodiencu = $("#chisodiencu").val();

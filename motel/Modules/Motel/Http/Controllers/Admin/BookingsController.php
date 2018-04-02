@@ -328,26 +328,43 @@ class BookingsController extends AdminBaseController
         $now_month = Carbon::now()->format('Y-m');
         $bills_detail_month_now = BillsDetail::where('user_id',$currentUser)
                                                 ->where('bills_id',$request->bill_id)
-                                                ->whereRaw("DATE_FORMAT(created_at,'%Y-%m')='{$now_month}'")
+                                                //->whereRaw("DATE_FORMAT(created_at,'%Y-%m')='{$now_month}'")
                                                 ->first();
         $bill = Bills::where('user_id',$currentUser)
                         ->where('id',$request->bill_id)
-                        ->whereRaw("DATE_FORMAT(created_at,'%Y-%m')='{$now_month}'")
-                        ->first();                                       
+                        //->whereRaw("DATE_FORMAT(created_at,'%Y-%m')='{$now_month}'")
+                        ->first();
+                        //dd($bills_detail_month_now);                                       
         if($bills_detail_month_now || $bill){
             //dd(Carbon::now()->endOfMonth());
+
             $thanhtiendien = ($request->electricity_index_new - $request->electricity_index) * $request->tiendiencontroller;
             $thanhtiennuoc = ($request->water_index_new - $request->water_index) * $request->tiennuoccontroller;
             $thanhtiengiuxe = $request->soxe * $request->tienxecontroller;
-            $tongcong = $thanhtiendien + $thanhtiennuoc + $thanhtiengiuxe + $request->tienracinput + $request->tieninternetinput + $request->tienphonginput;
-            $conlai = $request->datrainput - ($tongcong + $request->noinput);
+            $tienphong = str_replace(".", "", $request->tienphong);
+            $tienphong  = (int)$tienphong;
+
+            $tongcong = $thanhtiendien + $thanhtiennuoc + $thanhtiengiuxe + $request->tienracinput + $request->tieninternetinput + $tienphong;
+            //dd($request->all());
+            if($request->datrainput == 0){
+                $datra = str_replace(".", "", $request->datra);
+                $datra  = (int)$datra;
+            }else{
+                $datra = $request->datrainput;
+            }
+            $conlai = $datra - ($tongcong + $request->noinput);
             $date_paid = Carbon::parse($request->date_paid)->format('Y-m-d');
-            // dd($request->all());
+            //dd($request->all());
+            //dd($tongcong);
             $bill->total = $tongcong;
-            $bill->paid = $request->datrainput;
+            //dd($tongcong);
+
+            $bill->paid = $datra;
             $bill->date_paid = $date_paid;
             $bill->created_at = Carbon::now();
+            //dd($bill);
             $bill->save();
+
 
             $bills_detail_month_now->payment_on_electricity = $thanhtiendien;
             $bills_detail_month_now->payment_of_water = $thanhtiennuoc;
@@ -357,7 +374,7 @@ class BookingsController extends AdminBaseController
             $bills_detail_month_now->electricity_index = $request->electricity_index_new;
             $bills_detail_month_now->water_index = $request->water_index_new;
             $bills_detail_month_now->number_of_bike = $request->soxe;
-            $bills_detail_month_now->room_rates = $request->tienphonginput;
+            $bills_detail_month_now->room_rates = $tienphong;
             $bills_detail_month_now->owe = $request->conlai;
             $bills_detail_month_now->created_at = Carbon::now();
             $bills_detail_month_now->save();

@@ -706,4 +706,31 @@ class ApiMotelController extends ApiController
         }
       
     }
+    /**
+     * @SWG\Get(
+     *   path="/motel/get-my-profile",
+     *   description="",
+     *   summary="",
+     *   operationId="",
+     *   @SWG\Parameter(name="MT-API-KEY",in="header",required=true,type="string",description="Authorise connection",default="dev-api-key"),
+     *   produces={"application/json"},
+     *   tags={"Motel"},
+     *   @SWG\Response(response=401, description="unauthorized"),
+     *   @SWG\Response(response=200, description="Success"),
+     *   security={
+     *       {"api_key": {}}
+     *   }
+     * )
+     */
+    public function getmyprofile(){
+        $result = $this->motel->getmyprofile();
+        if($result != null){
+            return $this->respond([
+                'status' => 'success',
+                'status_code' => 200,
+                'message' => "User Prolife",
+                'data' => $result,
+            ]);
+        }return $this->respondNotFound('Not Found');
+    }
 }

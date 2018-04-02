@@ -18,4 +18,5 @@ interface MotelRepository extends BaseRepository
 	public function unlikeNewsByUser($id);
 	public function getListFilter($latitude, $longitude, $limit, $unit_price = 0);
 	public function postNews($data);
+	public function getmyprofile();
 }

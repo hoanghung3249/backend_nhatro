@@ -16,6 +16,7 @@
         display: inline-flex !important;
     }
 </style>
+<form action="{{ route('admin.room.room.bulkdelete') }}" method="get">
 <div class="row">
     <div class="col-xs-12">
         <div class="row">
@@ -58,6 +59,7 @@
 <!-- /.col (MAIN) -->
 </div>
 </div>
+
 <div id="myModal" class="modal fade modal-danger in" role="dialog">
   <div class="modal-dialog">
 
@@ -74,13 +76,14 @@
             <div class="custom-message"></div>
         </div>
       <div class="modal-footer">
-        <button type="submit" id="update-checkbox" class="btn btn-danger btn-flat btn-outline" style="float:left;"><i class="fa fa-trash"> Xác nhận</i></button>
+        <button type="submit"  class="btn btn-danger btn-flat btn-outline" style="float:left;"><i class="fa fa-trash"> Xác nhận</i></button>
         <button type="button" class="btn btn-outline btn-flat" data-dismiss="modal">Huỷ bỏ</button>
       </div>
     </div>
 
   </div>
 </div>
+</form>
 @include('core::partials.delete-modal')
 @stop
 

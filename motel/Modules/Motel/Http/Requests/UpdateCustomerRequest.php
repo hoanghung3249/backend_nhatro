@@ -5,7 +5,7 @@ namespace Modules\Motel\Http\Requests;
 use Modules\Core\Internationalisation\BaseFormRequest;
 use Modules\User\Contracts\Authentication;
 
-class CreateCustomerRequest extends BaseFormRequest
+class UpdateCustomerRequest extends BaseFormRequest
 {
 
     private $auth;
@@ -19,9 +19,10 @@ class CreateCustomerRequest extends BaseFormRequest
     public function rules()
     {
         $currentUser = $this->auth->user()->id;
+        $userId = $this->route()->parameter('id');
         return [
             'full_name' => 'required',
-            'cmnd' => "required|numeric|check_cmnd:customer,{$currentUser}|count_cmnd",
+            'cmnd' => "required|numeric|check_cmnd:customer,{$currentUser},{$userId}|count_cmnd",
             'phone' => 'required|numeric',
         ];
     }

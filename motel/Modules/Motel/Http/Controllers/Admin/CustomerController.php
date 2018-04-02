@@ -15,6 +15,7 @@ use Modules\Motel\Entities\Customer;
 use Yajra\Datatables\Datatables;
 use Modules\Motel\Http\Requests\CreateRoomRequest;
 use Modules\Motel\Http\Requests\CreateCustomerRequest;
+use Modules\Motel\Http\Requests\UpdateCustomerRequest;
 use Auth;
 use Modules\User\Contracts\Authentication;
 use Carbon\Carbon;
@@ -115,7 +116,7 @@ class CustomerController extends AdminBaseController
             return view('motel::admin.customer.edit',compact('cus'));
         }
     }
-    public function update(CreateCustomerRequest $request, $id){
+    public function update(UpdateCustomerRequest $request, $id){
         $date = Carbon::parse($request->dob)->format('Y-m-d');
         $data = Customer::find($id);
         $data->full_name = $request->full_name;
@@ -141,14 +142,18 @@ class CustomerController extends AdminBaseController
     }
     public function bulkDelete(Request $request){
         $id = [];
-        $id = $request->id;
+        $id = $request->selected_room;
+        //dd($id);
         if($id == null){
-            $request->session()->flash('danger','Chọn các mục trước khi xoá');
-            return 2;
+            return redirect()->back()
+                    ->withWarning(trans('Bạn phải chọn mục cần xoá'));
         }else{
-            $user = Customer::where('id',$id)->delete(); 
-            $request->session()->flash('success','Xoá thành công');
-            return 1;
-        } 
+            foreach( $id as $item ){
+                $cus = Customer::find($item);
+                $cus->delete();
+            }return redirect()->back()
+                    ->withSuccess(trans('Xoá thành công'));
+        }
+
     }
 }

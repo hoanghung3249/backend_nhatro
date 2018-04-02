@@ -136,19 +136,29 @@ class RoomController extends AdminBaseController
 	}
 	public function bulkDelete(Request $request){
 		$id = [];
-        $id = $request->id;
+        $id = $request->selected_room;
+        //dd($id);
         if($id == null){
-            $request->session()->flash('danger','Chọn các mục trước khi xoá');
-            return 2;
+            return redirect()->back()
+        			->withWarning(trans('Bạn phải chọn mục cần xoá'));
         }else{
-
-            $room = Room::find($id);
-            if($room->checkPhongThue() == false){
-        		return 2;
+        	$flag = 1;
+        	foreach( $id as $item ){
+	        	$room = Room::find($item);
+	            if($room->checkPhongThue() == false){
+	        		$flag = 2;
+	        	}else{
+	        		$room->delete();
+	        	}
         	}
-        	$room->delete();
-            $request->session()->flash('success','Xoá thành công');
-            return 1;
+        	if($flag == 1){
+        		return redirect()->back()
+        			->withSuccess(trans('Xoá thành công'));
+        	}elseif($flag==2){
+        		return redirect()->back()
+        			->withWarning(trans('Bạn sẽ không thể xoá những phòng đang có người thuê. Bạn cần phải xóa tất cả thủ tục đặt phòng này trước khi thực hiện thao tác xóa phòng'));
+        	}
+        	
         } 
 	}
 }

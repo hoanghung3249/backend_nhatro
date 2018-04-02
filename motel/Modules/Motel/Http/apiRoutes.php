@@ -48,5 +48,9 @@ $router->group(['prefix' =>'/motel','middleware'=>['auth:api','motel.api.key']],
     $router->get('unlike-news-by-user', [
         'as' => 'admin.motel.motel.unlikenewsbyuser',
         'uses' => 'ApiMotelController@unlikeNewsByUser',
-    ]);   
+    ]);
+    $router->get('get-my-profile', [
+        'as' => 'admin.motel.motel.getmyprofile',
+        'uses' => 'ApiMotelController@getmyprofile',
+    ]);     
 });

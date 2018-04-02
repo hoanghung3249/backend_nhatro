@@ -139,7 +139,7 @@
 @stop
 
 @push('js-stack')
-{!! JsValidator::formRequest('Modules\Motel\Http\Requests\CreateCustomerRequest') !!}
+{{-- {!! JsValidator::formRequest('Modules\Motel\Http\Requests\CreateCustomerRequest') !!} --}}
 <script type="text/javascript">
     jQuery(document).ready(function() {
         $(".js-example-basic-single").select2();
@@ -154,7 +154,8 @@
         });
         $('#datetimepicker2').datetimepicker({
             format : 'DD-MM-YYYY',
-        });
+        }).attr('readonly','readonly');
+        $("#datetimepicker2").keydown(false);
     });
 </script>
 <script type="text/javascript">

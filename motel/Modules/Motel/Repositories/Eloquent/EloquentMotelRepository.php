@@ -336,4 +336,16 @@ class EloquentMotelRepository extends EloquentBaseRepository implements MotelRep
         //$new->sub1 = 'assets/media/'.$this->updateImageProfile($data['image']);
 
 	}
+	public function getmyprofile(){
+		$user = Auth::guard('api')->user();
+		$data_user = User::select('users.email','users.first_name','users.last_name','users.phone','users.address','users.latitude','users.longitude','users.avatar','users.active','role_users.role_id')
+			            ->join('role_users', 'users.id', '=', 'role_users.user_id')
+			            ->join('roles', 'roles.id', '=', 'role_users.role_id')
+		    			->where('users.id',$user->id)
+		    			//->where('role_users.user_id',$user_check->id)
+		    			->first();
+		if($data_user){
+			return $data_user;
+		}return null;
+	}
 }

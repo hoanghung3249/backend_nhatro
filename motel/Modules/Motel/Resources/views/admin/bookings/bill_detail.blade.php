@@ -41,12 +41,12 @@
                 <table id="tablevehilce" class="table table-bordered table-hover data-table" cellspacing="0" width="100%">
                     <thead>
                         <tr>
-                            <th width="10%">Nội dung thanh toán</th>
+                            <th width="20%">Nội dung thanh toán</th>
                             <th width="10%">Đơn giá</th>
                             <th width="10%">Chỉ số cũ</th>
                             <th width="25%">Chỉ số mới</th>  
-                            <th width="10%">Số lượng</th>
-                            <th width="20%">Thành tiền</th>          
+                            <th width="5%">Số lượng</th>
+                            <th width="5%">Thành tiền</th>          
                         </tr>
                     </thead>
                     <tbody>
@@ -101,18 +101,20 @@
                         </tr>
                         <tr>
                             <td>Tiền phòng</td>
-                            <td align="right" id="tienphong" data-tienphong="{{$room_price}}">@if($bills_detail_month_now->room_rates == null) {{ $price_room }} @else {{number_format($bills_detail_month_now->room_rates,0,'.','.')}} @endif</td>
+                            <td align="right" id="tienphongtd" data-tienphong="{{$room_price}}">
+                            <input class="form-control cham" type="text" data-thousands="." id="tienphong" style="text-align: right;" name="tienphong"  @if($bills_detail_month_now->room_rates == null) value="{{ $price_room }}" @else value="{{number_format($bills_detail_month_now->room_rates,0,'.','.')}}"  @endif>
+                            </td>
                             <td></td>
                             <td></td>
                             <td></td>
-                            <td align="right">{{ $price_room }}</td>
-                            <input type="hidden" id="tienphonginput" name="tienphonginput" value="{{$room_price}}">
+                            <td align="right" id="thanhtienphong">@if($bills_detail_month_now->room_rates == null) {{ $price_room }} @else {{number_format($bills_detail_month_now->room_rates,0,'.','.')}}  @endif </td>
+                            <input type="hidden" id="tienphonginput" name="tienphonginput" @if($bills_detail_month_now->room_rates == null) value="{{ $room_price }}" @else value="{{$bills_detail_month_now->room_rates}}" @endif>
                         </tr>
                         <tr>
 
                             <td colspan="5" style="background-color: #CCC; font-weight: bold;" align="right">Tổng cộng</td>
-                            <td align="right" style="font-weight: bold;" id="tongcong">{{ number_format($total,0,'.','.') }}</td>
-                            <input type="hidden" id="tongconginput" name="tongconginput" value="{{$total}}">
+                            <td align="right" style="font-weight: bold;" id="tongcong">@if($bills->total == null) {{ number_format($total,0,'.','.') }} @else {{ number_format($bills->total,0,'.','.') }} @endif</td>
+                            <input type="hidden" id="tongconginput" name="tongconginput" @if($bills->total == null) value="{{$total}}" @else value="{{$bills->total }}" @endif>
                         </tr>
                         <tr>
                             <td colspan="5" style="font-weight: bold;" align="right">Nợ</td>
@@ -133,12 +135,12 @@
                                 </div>
                             </td>
                             <td style="font-weight: bold;" align="right">Đã trả</td>
-                            <td align="right" style="font-weight: bold;"><input id="datra" align="right" class="form-control" style="text-align: right;" data-thousands="." type="text" name="datra" @if($bills->date_paid != null) value="{{number_format($bills->paid,0,'.','.') }}" @endif></td>
+                            <td align="right" style="font-weight: bold;"><input id="datra" class="form-control cham" style="text-align: right;" data-thousands="." type="text" name="datra" @if($bills->date_paid != null) value="{{number_format($bills->paid,0,'.','.') }}" @endif></td>
                             <input type="hidden" id="datrainput" name="datrainput" value="0">
                         </tr>
                         <tr>
                             <td colspan="5" style="font-weight: bold;" align="right">Còn lại</td>
-                            <td align="right" style="font-weight: bold;" id="conlai">@if($bills->paid==null || $bills->paid == 0) {{ number_format($total,0,'.','.') }} @else {{ number_format($total-$bills->paid,0,'.','.') }} @endif</td>
+                            <td align="right" style="font-weight: bold;" id="conlai">@if($bills->paid==null || $bills->paid == 0) 0 @else {{ number_format($bills->total - $bills->paid,0,'.','.') }} @endif</td>
                             <input type="hidden" id="conlaiinput" name="conlaiinput" value="0">
                         </tr>
                     </tbody>
@@ -204,16 +206,16 @@
      return x1 + x2;
      }
     jQuery(document).ready(function($) {
-        $('#datra').maskNumber({
+        $('.cham').maskNumber({
           integer: true,
         });
-        $('#datra').click(function(e){
+        $('.cham').click(function(e){
             //alert(1);
             e.stopPropagation();
             $(this).css("text-align","");
         })
         $(document).click(function() {
-            $('#datra').css("text-align","right");
+            $('.cham').css("text-align","right");
         })
 
         $(".update").on("click",function(){
@@ -227,7 +229,6 @@
             }else{
                 var chisodienmoi = 0;
             }
-
 
             if($("#chisonuoccu").val()){
                 var chisonuoccu = $("#chisonuoccu").val();
@@ -255,7 +256,7 @@
 
             var tienrac = $("#tienrac").attr("data-tienrac");
             var tieninternet = $("#tieninternet").attr("data-internet");
-            var tienphong = $("#tienphong").attr("data-tienphong");
+            // var thanhtienphong = $("#tienphong").val(tienphong);
             //alert(tienphong);
 
             if($("#datra").val()){
@@ -266,12 +267,21 @@
                 var datra = 0;
             }
             $("#datrainput").val(datra);
-            //alert(datra);
+            if($("#tienphong").val()){
+                var tienphong = $("#tienphong").val();
+                var tienphong = tienphong.replace(/\./g,'');
+                //datrainput
+            }else{
+                var tienphong = 0;
+            }
+            //alert(tienphong);
+            $("#tienphonginput").val(tienphong);
             
             //alert(datra);
             var thanhtiendien = parseInt(tiendien) * (parseInt(chisodienmoi) - parseInt(chisodiencu));
             var thanhtiennuoc = parseInt(tiennuoc) * (parseInt(chisonuocmoi) - parseInt(chisonuoccu));
             var thanhtiengiuxe = parseInt(tiengiuxe) * parseInt(soxe);
+            //var thanhtienphong = 
 
             var tongcong = parseInt(thanhtiendien) + parseInt(thanhtiennuoc) + parseInt(thanhtiengiuxe) + parseInt(tienrac) +parseInt(tieninternet) + parseInt(tienphong);
             var conlai = parseInt(tongcong) - parseInt(datra);
@@ -290,6 +300,8 @@
 
             $("#conlai").html(addPeriod(conlai));
             $("#conlaiinput").val(conlai);
+
+            $("#thanhtienphong").html(addPeriod(tienphong));
 
 
         })

@@ -430,4 +430,11 @@ class BookingsController extends AdminBaseController
             ->withSuccess("Xóa hóa đơn thành công");
         }  
     }
+    public function getPrice(Request $request){
+        $id = $request->get('val');
+        $data = Room::find($id);
+        if($data){
+            return $data->unit_price;
+        }
+    }
 }

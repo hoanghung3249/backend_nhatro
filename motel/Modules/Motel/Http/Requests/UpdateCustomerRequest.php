@@ -23,7 +23,7 @@ class UpdateCustomerRequest extends BaseFormRequest
         return [
             'full_name' => 'required',
             'cmnd' => "required|numeric|check_cmnd:customer,{$currentUser},{$userId}|count_cmnd",
-            'phone' => 'required|numeric',
+            'phone' => 'required|min:7',
         ];
     }
 
@@ -41,7 +41,7 @@ class UpdateCustomerRequest extends BaseFormRequest
             'cmnd.numeric' => 'Chứng minh nhân dân phải là kiểu số',
 
             'phone.required' => 'Số điện thoại không được bỏ trống',
-            'phone.numeric' => 'Số điện thoại phải là kiểu số',
+            'phone.min' => 'Số điện thoại phải có ít nhất 7 chữ số',
 
             'cmnd.check_cmnd' => 'Số chứng minh nhân dân đã tồn tại trong hệ thống',
             'cmnd.count_cmnd' => 'Số chứng minh nhân dân không đúng định dạng'

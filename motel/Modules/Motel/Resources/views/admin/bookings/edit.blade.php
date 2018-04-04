@@ -101,7 +101,7 @@
 
                             <div class="form-group{{ $errors->has('unit_price') ? ' has-error' : '' }}">
                                     {!! Form::label('unit_price', trans('Gía phòng')) !!}
-                                    {!! Form::text('unit_price', old('unit_price'), ['class' => 'form-control', 'placeholder' => trans('Ví dụ: 5000000')]) !!}
+                                    {!! Form::text('unit_price', old('unit_price'), ['readonly','class' => 'form-control', 'placeholder' => trans('Ví dụ: 5000000')]) !!}
                                     {!! $errors->first('unit_price', '<span class="help-block">:message</span>') !!}
                                 </div>
 

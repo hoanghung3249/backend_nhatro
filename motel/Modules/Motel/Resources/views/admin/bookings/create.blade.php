@@ -98,24 +98,6 @@
 						</div>
 						<div class="row">
 							<div class="col-sm-6">
-
-							<div class="form-group{{ $errors->has('unit_price') ? ' has-error' : '' }}">
-									{!! Form::label('unit_price', trans('Gía phòng')) !!}
-									{!! Form::text('unit_price', old('unit_price'), ['class' => 'form-control', 'placeholder' => trans('Ví dụ: 5000000')]) !!}
-									{!! $errors->first('unit_price', '<span class="help-block">:message</span>') !!}
-								</div>
-
-							</div>
-							<div class="col-sm-6">
-								<div class="form-group{{ $errors->has('down_payment') ? ' has-error' : '' }}">
-									{!! Form::label('down_payment', trans('Tiền cọc')) !!}
-									{!! Form::number('down_payment', old('down_payment'), ['class' => 'form-control', 'placeholder' => trans('Ví dụ: 2000000')]) !!}
-									{!! $errors->first('down_payment', '<span class="help-block">:message</span>') !!}
-								</div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-sm-6">
 								<div class="form-group">
 								{!! Form::label('name', 'Phòng còn trống') !!}
 									<select class="js-example-basic-single form-control" name="room_id" id="room_id">
@@ -124,6 +106,23 @@
 									  <option value="{{ $item->id }}">{{ $item->name }}</option>
 									@endforeach
 									</select>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group{{ $errors->has('unit_price') ? ' has-error' : '' }}">
+									{!! Form::label('unit_price', trans('Gía phòng')) !!}
+									{!! Form::text('unit_price', old('unit_price'), ['id'=>'price','readonly','class' => 'form-control', 'placeholder' => trans('Ví dụ: 5000000')]) !!}
+									{!! $errors->first('unit_price', '<span class="help-block">:message</span>') !!}
+								</div>
+
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group{{ $errors->has('down_payment') ? ' has-error' : '' }}">
+									{!! Form::label('down_payment', trans('Tiền cọc')) !!}
+									{!! Form::number('down_payment', old('down_payment'), ['class' => 'form-control', 'placeholder' => trans('Ví dụ: 2000000')]) !!}
+									{!! $errors->first('down_payment', '<span class="help-block">:message</span>') !!}
 								</div>
 							</div>
 							<div class="col-sm-6">
@@ -212,6 +211,24 @@
 {{-- {!! JsValidator::formRequest('Modules\Motel\Http\Requests\CreateRoomRequest') !!} --}}
 <script type="text/javascript">
 	jQuery(document).ready(function() {
+		//Filter gía theo phòng
+		$("#room_id").change(function(){
+			//alert(1);
+			var val = $("#room_id :selected").val();
+			$.ajax({
+					url: '{{ route('admin.bookings.bookings.getpriceroom') }}',
+					type: 'get',
+					dataType: 'html',
+					data: {val:val},
+				})
+				.done(function(data) {
+					if(data){
+						$("#price").val(data);
+					}else{
+						$("#price").val(null);
+					}
+				})
+		})
 
 		var arr_id = [];
 		$(".js-example-basic-single").select2({ width: '100%' });
